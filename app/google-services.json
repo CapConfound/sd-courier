@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "145859505823",
+    "firebase_url": "https://sd-courier.firebaseio.com",
+    "project_id": "sd-courier",
+    "storage_bucket": "sd-courier.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:145859505823:android:6314057cebb567fdd9bcaa",
+        "android_client_info": {
+          "package_name": "ru.simdelivery.sdcourier"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "145859505823-01kdl1r0nrv3il5odjlm91r3kmfe7p1p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAHv-8NEbSl8wVo0ZPIsX3phB3jXjfq3p0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "145859505823-01kdl1r0nrv3il5odjlm91r3kmfe7p1p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

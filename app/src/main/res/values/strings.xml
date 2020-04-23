@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">sd-courier</string>
+    <string name="auth_token">null</string>
+    <string name="title_new_orders">Заказы</string>
+    <string name="title_my_orders">Мои заказы</string>
+    <string name="title_profile">Профиль</string>
+    <string name="title_orders_history">История заказов</string>
+    <string name="title_login">Логин</string>
+    <string name="title_settings">Настройки</string>
 </resources>

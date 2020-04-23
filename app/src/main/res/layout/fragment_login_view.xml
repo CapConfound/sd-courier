@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:background="@color/colorPrimary"
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".LauncherActivity">
+
+    <!--    <RelativeLayout-->
+    <!--        android:layout_width="350dp"-->
+    <!--        android:layout_height="250dp"-->
+    <!--        android:background="@drawable/login_text_background"-->
+    <!--        android:layout_centerHorizontal="true"-->
+    <!--        android:layout_marginTop="30dp">-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/login_header">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="45dp"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="@font/manrope_bold"
+                android:text="Вход"
+                android:textColor="@color/colorPrimary"
+                android:textSize="60sp" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="245dp" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/login_incorrect_view"
+                android:text="Введённые данные неверны"
+                android:textSize="18sp"
+                android:textColor="#F00"
+                android:textAlignment="center"
+                android:visibility="invisible"/>
+
+            <ss.anoop.awesometextinputlayout.AwesomeTextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:borderColor="@color/colorAccentLite"
+                app:borderWidth="2dp"
+                app:cornerRadius="8dp"
+                android:padding="16dp">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/login_username_view"
+                    android:textColor="#000"
+                    android:textSize="22sp"
+                    android:hint="Email" />
+
+            </ss.anoop.awesometextinputlayout.AwesomeTextInputLayout>
+
+            <ss.anoop.awesometextinputlayout.AwesomeTextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                app:borderColor="@color/colorAccentLite"
+                app:borderWidth="2dp"
+                app:cornerRadius="8dp"
+                android:padding="16dp">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/login_password_view"
+                    android:textColor="#000"
+                    android:textSize="22sp"
+                    android:hint="Пароль"
+                    android:inputType="textPassword"/>
+
+            </ss.anoop.awesometextinputlayout.AwesomeTextInputLayout>
+
+
+
+
+            <Button
+                android:layout_width="180dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="40dp"
+                android:id="@+id/login_button"
+                android:layout_marginStart="60dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="26sp"
+                android:fontFamily="@font/manrope_regular"
+                android:text="Войти"
+                style="?android:attr/borderlessButtonStyle"
+                android:background="@drawable/login_button_background"/>
+
+
+        </LinearLayout>
+
+
+
+    </RelativeLayout>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="550dp"
+        android:background="@drawable/login_footer"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

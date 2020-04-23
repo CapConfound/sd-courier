@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_orders">
+
+    <fragment
+        android:id="@+id/navigation_login"
+        android:name="ru.simdelivery.sdcourier.view.fragments.login.LoginFragment"
+        android:label="@string/title_login"
+        tools:layout="@layout/fragment_login_view" />
+
+    <fragment
+        android:id="@+id/navigation_orders"
+        android:name="ru.simdelivery.sdcourier.view.fragments.orders.OrdersFragment"
+        android:label="@string/title_new_orders"
+        tools:layout="@layout/fragment_orders_available_view" />
+
+    <fragment
+        android:id="@+id/navigation_my_orders"
+        android:name="ru.simdelivery.sdcourier.view.fragments.my_orders.MyOrdersFragment"
+        android:label="@string/title_my_orders"
+        tools:layout="@layout/fragment_my_orders_view" />
+
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="ru.simdelivery.sdcourier.view.fragments.profile.ProfileFragment"
+        android:label="@string/title_profile"
+        tools:layout="@layout/fragment_profile_view" />
+
+    <fragment
+        android:id="@+id/navigation_orders_history"
+        android:name="ru.simdelivery.sdcourier.view.fragments.orders_history.OrdersHistoryFragment"
+        android:label="@string/title_orders_history"
+        tools:layout="@layout/fragment_orders_history_view" />
+
+    <fragment
+        android:id="@+id/navigation_settings"
+        android:name="ru.simdelivery.sdcourier.view.fragments.settings.SettingsFragment"
+        android:label="@string/title_settings"
+        tools:layout="@layout/fragment_settings" />
+
+
+
+</navigation>
