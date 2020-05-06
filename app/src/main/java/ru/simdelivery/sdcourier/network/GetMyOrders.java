@@ -4,13 +4,12 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.Header;
 import ru.simdelivery.sdcourier.model.Order;
 
-public interface GetOrders {
+public interface GetMyOrders {
 
-    @GET("order/free")
-    Call<List<Order>> getFreeOrders();
+    @GET("order/my")
+    Call<List<Order>> getMyOrders();
 
 }
 

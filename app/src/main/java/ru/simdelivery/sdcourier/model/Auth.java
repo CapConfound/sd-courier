@@ -4,12 +4,12 @@ public class Auth {
 
     public String username;
     public String password;
-//    public String gcm_token;
+    public String gcmToken;
 
-    public Auth(String username, String password) {
+    public Auth(String username, String password, String gcmToken) {
         this.username = username;
         this.password = password;
-//        this.gcm_token = gcm_token;
+        this.gcmToken = gcmToken;
     }
 
 }

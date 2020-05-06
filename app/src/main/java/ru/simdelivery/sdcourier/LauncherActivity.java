@@ -1,23 +1,18 @@
 package ru.simdelivery.sdcourier;
 
-import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.app.MediaRouteButton;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -25,10 +20,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
-import ru.simdelivery.sdcourier.view.fragments.login.LoginFragment;
-import ru.simdelivery.sdcourier.view.fragments.my_orders.MyOrdersFragment;
-import ru.simdelivery.sdcourier.view.fragments.orders.OrdersFragment;
-import ru.simdelivery.sdcourier.view.fragments.profile.ProfileFragment;
+import java.util.List;
+
+import ru.simdelivery.sdcourier.model.Order;
+import ru.simdelivery.sdcourier.view.fragments.LoginFragment;
+import ru.simdelivery.sdcourier.view.fragments.MyOrdersFragment;
+import ru.simdelivery.sdcourier.view.fragments.OrdersFragment;
+import ru.simdelivery.sdcourier.view.fragments.ProfileFragment;
 
 public class LauncherActivity extends AppCompatActivity {
     public static final String FIREBASE_TAG = "1";
@@ -53,9 +51,16 @@ public class LauncherActivity extends AppCompatActivity {
                         }
 
                         // Get new Instance ID token
-                        String token = task.getResult().getToken();
+                        String gcmToken = task.getResult().getToken();
+                        sharedPref = getPreferences(Context.MODE_PRIVATE);
 
-                        Log.i("TOKEN", token);
+                        editor = sharedPref.edit();
+                        //insert token into SharedPreferences
+                        editor.putString(getString(R.string.gcm_token), gcmToken);
+                        editor.commit();
+
+                        Log.i("GCM_TOKEN", gcmToken);
+
                         //Toast.makeText(LauncherActivity.this, token, Toast.LENGTH_SHORT).show();
 
                     }
@@ -69,8 +74,10 @@ public class LauncherActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
 //        bottomNavigationView.setVisibility(View.GONE);
 
+
         sharedPref = getPreferences(Context.MODE_PRIVATE);
         String token = sharedPref.getString(getString(R.string.auth_token), "");
+        Log.i("auth_TOKEN", token);
         if(!token.equals("")) {
             getSupportFragmentManager()
                     .beginTransaction()
@@ -100,6 +107,34 @@ public class LauncherActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setVisibility(View.VISIBLE);
     }
+
+    public List<Order> getFreeOrders (String token){
+        List<Order> ordersList = null;
+
+        
+
+        return ordersList;
+    }
+
+    public List<Order> getMyOrders (String token){
+        List<Order> ordersList = null;
+
+
+
+        return ordersList;
+    }
+
+    public List<Order> getHistoryOrders (String token){
+        List<Order> ordersList = null;
+
+
+
+        return ordersList;
+    }
+
+
+
+
 
 
 

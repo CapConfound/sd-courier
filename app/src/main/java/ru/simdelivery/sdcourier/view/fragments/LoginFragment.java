@@ -1,4 +1,4 @@
-package ru.simdelivery.sdcourier.view.fragments.login;
+package ru.simdelivery.sdcourier.view.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -9,20 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-
-import com.google.android.gms.common.internal.ServiceSpecificExtraArgs;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.textfield.TextInputEditText;
-
-import java.util.logging.Logger;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -33,8 +25,6 @@ import ru.simdelivery.sdcourier.model.Auth;
 import ru.simdelivery.sdcourier.model.AuthResponse;
 import ru.simdelivery.sdcourier.network.ApiClient;
 import ru.simdelivery.sdcourier.network.GetUserToken;
-import ru.simdelivery.sdcourier.view.fragments.orders.OrdersFragment;
-import ru.simdelivery.sdcourier.view.fragments.settings.SettingsFragment;
 
 public class LoginFragment extends Fragment {
 
@@ -66,9 +56,11 @@ public class LoginFragment extends Fragment {
     private void authentication() {
         String login_string = loginEdit.getText().toString();
         String password_string = passwordEdit.getText().toString();
-        String token = null;
-        Auth data = new Auth(login_string, password_string);
-//        if(!login_string.equals("") && !password_string.equals("")) openApp();
+        sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        String gcmToken = sharedPref.getString(getString(R.string.gcm_token), "");
+
+
+        Auth data = new Auth(login_string, password_string, gcmToken);
         GetUserToken service = ApiClient.getAuthData().create(GetUserToken.class);
 
         Call<AuthResponse> call = service.getAuthResponse(data);
@@ -81,18 +73,24 @@ public class LoginFragment extends Fragment {
                     la.showIncorrectLogin();
                 }
                 else {
+                    Log.d("код не 401", "точно");
                     AuthResponse userData = response.body();
+                    Log.d("response.body()", response.toString());
                     sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
 
                     editor = sharedPref.edit();
+                    //insert token into SharedPreferences
                     editor.putString(getString(R.string.auth_token), response.body().getToken());
                     editor.commit();
 
-                    //TODO insert token to SharedPreferences
-                    Log.d("response", response.message());
+
+
                     openApp();
 //                Log.d("token", String.valueOf(response.body().getToken()));
                 }
+                editor = sharedPref.edit();
+                editor.putString(getString(R.string.user_email), response.body().getUsername());
+                editor.commit();
             }
 
             @Override

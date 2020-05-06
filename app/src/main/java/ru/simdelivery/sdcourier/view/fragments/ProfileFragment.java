@@ -1,18 +1,19 @@
-package ru.simdelivery.sdcourier.view.fragments.profile;
+package ru.simdelivery.sdcourier.view.fragments;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,12 +22,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import java.util.Calendar;
+import java.util.List;
 
-import ru.simdelivery.sdcourier.LauncherActivity;
 import ru.simdelivery.sdcourier.R;
-import ru.simdelivery.sdcourier.view.fragments.login.LoginFragment;
-import ru.simdelivery.sdcourier.view.fragments.orders_history.OrdersHistoryFragment;
-import ru.simdelivery.sdcourier.view.fragments.settings.SettingsFragment;
 
 public class ProfileFragment extends Fragment {
 
@@ -44,8 +42,6 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        SettingsFragment settingsFragment = new SettingsFragment();
-        OrdersHistoryFragment ordersHistoryFragment = new OrdersHistoryFragment();
         View v = inflater.inflate(R.layout.fragment_profile_view, container, false);
 
         userNameText = v.findViewById(R.id.user_name_view);
@@ -53,6 +49,9 @@ public class ProfileFragment extends Fragment {
         settingsBtn = v.findViewById(R.id.user_settings_button);
         logoutBtn = v.findViewById(R.id.user_logout_button);
         ordersHistory = v.findViewById(R.id.user_order_history_button);
+
+        sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        emailText.setText(sharedPref.getString(getString(R.string.user_email), ""));
 
         settingsBtn.setOnClickListener(v1 -> openSettingsFragment());
 
@@ -73,7 +72,7 @@ public class ProfileFragment extends Fragment {
         fragmentTransaction.replace(R.id.fragment_container, new OrdersHistoryFragment()).addToBackStack(null).commit();
     }
 
-    private void logout() {
+    public void logout() {
         //TODO удаление токена из памяти при выходе
         sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
 
@@ -88,6 +87,10 @@ public class ProfileFragment extends Fragment {
                 .getLaunchIntentForPackage(getActivity().getBaseContext().getPackageName());
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(i);
+
+
     }
+
+
 
 }

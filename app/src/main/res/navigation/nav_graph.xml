@@ -7,37 +7,37 @@
 
     <fragment
         android:id="@+id/navigation_login"
-        android:name="ru.simdelivery.sdcourier.view.fragments.login.LoginFragment"
+        android:name="ru.simdelivery.sdcourier.view.fragments.LoginFragment"
         android:label="@string/title_login"
         tools:layout="@layout/fragment_login_view" />
 
     <fragment
         android:id="@+id/navigation_orders"
-        android:name="ru.simdelivery.sdcourier.view.fragments.orders.OrdersFragment"
+        android:name="ru.simdelivery.sdcourier.view.fragments.OrdersFragment"
         android:label="@string/title_new_orders"
         tools:layout="@layout/fragment_orders_available_view" />
 
     <fragment
         android:id="@+id/navigation_my_orders"
-        android:name="ru.simdelivery.sdcourier.view.fragments.my_orders.MyOrdersFragment"
+        android:name="ru.simdelivery.sdcourier.view.fragments.MyOrdersFragment"
         android:label="@string/title_my_orders"
         tools:layout="@layout/fragment_my_orders_view" />
 
     <fragment
         android:id="@+id/navigation_profile"
-        android:name="ru.simdelivery.sdcourier.view.fragments.profile.ProfileFragment"
+        android:name="ru.simdelivery.sdcourier.view.fragments.ProfileFragment"
         android:label="@string/title_profile"
         tools:layout="@layout/fragment_profile_view" />
 
     <fragment
         android:id="@+id/navigation_orders_history"
-        android:name="ru.simdelivery.sdcourier.view.fragments.orders_history.OrdersHistoryFragment"
+        android:name="ru.simdelivery.sdcourier.view.fragments.OrdersHistoryFragment"
         android:label="@string/title_orders_history"
         tools:layout="@layout/fragment_orders_history_view" />
 
     <fragment
         android:id="@+id/navigation_settings"
-        android:name="ru.simdelivery.sdcourier.view.fragments.settings.SettingsFragment"
+        android:name="ru.simdelivery.sdcourier.view.fragments.SettingsFragment"
         android:label="@string/title_settings"
         tools:layout="@layout/fragment_settings" />
 

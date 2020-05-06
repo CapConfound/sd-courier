@@ -9,18 +9,27 @@ public class Order {
     @SerializedName("id")
     @Expose
     private Integer id;
+
     @SerializedName("points")
     @Expose
     private List<Point> points = null;
+
     @SerializedName("items")
     @Expose
     private List<Item> items = null;
+
     @SerializedName("status")
     @Expose
     private String status;
+
     @SerializedName("cost")
     @Expose
     private Integer cost;
+
+    @SerializedName("currentPointId")
+    @Expose
+    private Integer currentPointId;
+
 
     public Integer getId() {
         return id;
@@ -62,4 +71,11 @@ public class Order {
         this.cost = cost;
     }
 
+    public Integer getCurrentPointId() {
+        return currentPointId;
+    }
+
+    public void setCurrentPointId(Integer currentPointId) {
+        this.currentPointId = currentPointId;
+    }
 }

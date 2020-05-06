@@ -1,4 +1,4 @@
-package ru.simdelivery.sdcourier.view.fragments.orders_history;
+package ru.simdelivery.sdcourier.view.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,11 +11,11 @@ import androidx.fragment.app.Fragment;
 
 import ru.simdelivery.sdcourier.R;
 
-public class OrdersHistoryFragment extends Fragment {
+public class NoteFragment extends Fragment {
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_orders_history_view, container, false);
+        return inflater.inflate(R.layout.fragment_note, container, false);
     }
 }

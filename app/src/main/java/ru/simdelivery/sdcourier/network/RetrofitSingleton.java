@@ -8,6 +8,9 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitSingleton {
+/*
+                Этот класс не используется
+                Но он рабочий))
 
     private static final String BASE_URL = "";
     public static Retrofit retrofit;
@@ -44,5 +47,5 @@ public class RetrofitSingleton {
         GetUserToken service = retrofit.create(GetUserToken.class);
 
     }
-
+*/
 }

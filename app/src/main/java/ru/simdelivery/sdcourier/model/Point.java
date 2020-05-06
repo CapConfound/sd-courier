@@ -8,24 +8,31 @@ public class Point {
     @SerializedName("id")
     @Expose
     private Integer id;
+
     @SerializedName("address")
     @Expose
     private Address address;
+
     @SerializedName("person")
     @Expose
     private Person person;
+
     @SerializedName("number")
     @Expose
     private Integer number;
+
     @SerializedName("arrivalAtFrom")
     @Expose
     private String arrivalAtFrom;
+
     @SerializedName("arrivalAtTo")
     @Expose
     private String arrivalAtTo;
+
     @SerializedName("commentary")
     @Expose
     private Object commentary;
+
     @SerializedName("paymentObject")
     @Expose
     private String paymentObject;
@@ -75,7 +82,11 @@ public class Point {
     }
 
     public void setArrivalAtTo(String arrivalAtTo) {
-        this.arrivalAtTo = arrivalAtTo;
+        if (arrivalAtTo != null) {
+            this.arrivalAtTo = arrivalAtTo;
+        } else {
+            this.arrivalAtTo = "ASAP";
+        }
     }
 
     public Object getCommentary() {

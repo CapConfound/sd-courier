@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorSkyBlue">#78ACFB</color>
+    <color name="colorLiteBlue">#E4EEFB</color>
 
     <color name="colorOrdersTaken">#4A9D62</color>
+    <color name="colorOrdersTakenLite">#BBE1C6</color>
     <color name="colorYellow">#FF9800</color>
     <color name="colorAccentLite">#106CF8</color>
     <color name="colorAccent">#0A5EDD</color>
@@ -10,5 +11,10 @@
     <color name="colorPrimary">#FFF</color>
     <color name="colorDarkGray">#393838</color>
     <color name="colorGray">#686868</color>
-    <color name="colorLightGray">#D6D6D6</color>
+    <color name="colorSpaceGray">#989898</color>
+    <color name="colorLightGray">#F2F2F2</color>
+    <color name="colorStatusFree">#106CF8</color>
+    <color name="colorStatusMy">#4A9D62</color>
+    <color name="colorStatusOnTheWay">#C13EF8</color>
+    <color name="colorStatusWaiting">#FF9800</color>
 </resources>

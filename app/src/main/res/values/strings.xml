@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">sd-courier</string>
-    <string name="auth_token">null</string>
+    <string name="user_name">userName</string>
+    <string name="user_email">userEmail</string>
+    <string name="auth_token">authToken</string>
+    <string name="gcm_token">gcmToken</string>
+    <string name="utc_offset">utcOffset</string>
     <string name="title_new_orders">Заказы</string>
     <string name="title_my_orders">Мои заказы</string>
     <string name="title_profile">Профиль</string>
