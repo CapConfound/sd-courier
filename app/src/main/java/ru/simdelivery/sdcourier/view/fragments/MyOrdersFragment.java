@@ -22,6 +22,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import ru.simdelivery.sdcourier.R;
 import ru.simdelivery.sdcourier.model.Order;
+import ru.simdelivery.sdcourier.model.savedData.SavedOrders;
 import ru.simdelivery.sdcourier.network.ApiClient;
 import ru.simdelivery.sdcourier.network.GetMyOrders;
 import ru.simdelivery.sdcourier.network.GetOrders;
@@ -41,31 +42,28 @@ public class MyOrdersFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_my_orders_view, container, false);
 
         sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-
         String token = sharedPref.getString(getString(R.string.auth_token), "");
+
         GetMyOrders service = ApiClient.getRetrofitInstance(token).create(GetMyOrders.class);
         Call<List<Order>> call = service.getMyOrders();
         call.enqueue(new Callback<List<Order>>() {
             @Override
             public void onResponse(Call<List<Order>> call, Response<List<Order>> response) {
-                List<Order> myOrdersData = response.body();
-                Log.d("authToken", token);
-//                Log.d("gcmToken", String.valueOf(R.string.gcm_token));
-                Log.d(d, String.valueOf(response));
+
+                List<Order> ordersList = response.body();
                 rv = v.findViewById(R.id.my_orders_recycler);
-                adapter = new MyOrdersAdapter(myOrdersData, getActivity());
+                adapter = new MyOrdersAdapter(ordersList, getActivity());
                 rv.setAdapter(adapter);
                 rv.setLayoutManager(new LinearLayoutManager(getContext()));
-
-
             }
 
             @Override
             public void onFailure(Call<List<Order>> call, Throwable t) {
-                Toast.makeText(getContext(), "При загрузке данных произошла ошибка", Toast.LENGTH_SHORT).show();
-
+                Log.e("loadMyOrders called", "onFailure");
             }
         });
+
+
 
         return v;
     }

@@ -73,7 +73,7 @@ public class ProfileFragment extends Fragment {
     }
 
     public void logout() {
-        //TODO удаление токена из памяти при выходе
+
         sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
 
         editor = sharedPref.edit();

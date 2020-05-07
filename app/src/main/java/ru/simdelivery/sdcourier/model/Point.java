@@ -3,7 +3,7 @@ package ru.simdelivery.sdcourier.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Point {
+public class Point implements Comparable<Point> {
 
     @SerializedName("id")
     @Expose
@@ -103,6 +103,15 @@ public class Point {
 
     public void setPaymentObject(String paymentObject) {
         this.paymentObject = paymentObject;
+    }
+
+
+    @Override
+    public int compareTo(Point p) {
+        if(getNumber() == null || p.getNumber() == null) {
+            return 0;
+        }
+        return getNumber().compareTo(p.getNumber());
     }
 
 }

@@ -20,67 +20,63 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import ru.simdelivery.sdcourier.LauncherActivity;
+import ru.simdelivery.sdcourier.model.DataLoader;
 import ru.simdelivery.sdcourier.model.Order;
+import ru.simdelivery.sdcourier.model.savedData.SavedOrders;
 import ru.simdelivery.sdcourier.network.ApiClient;
 import ru.simdelivery.sdcourier.network.GetOrders;
 import ru.simdelivery.sdcourier.R;
 import ru.simdelivery.sdcourier.view.adapters.OrdersAdapter;
 
 public class OrdersFragment extends Fragment {
+    RecyclerView rv;
     OrdersAdapter adapter;
-    RecyclerView recyclerView;
-    private SharedPreferences sharedPref;
+    DataLoader dataLoader;
     String d = "!!!!!MYDEBUG!!!!!!";
+    SharedPreferences sharedPref;
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_orders_available_view, container, false);
-        sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
 
+        rv = v.findViewById(R.id.available_orders_recycler);
+
+        sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         String token = sharedPref.getString(getString(R.string.auth_token), "");
 
-        recyclerView = v.findViewById(R.id.available_orders_recycler);
-        GetOrders servise = ApiClient.getRetrofitInstance(token).create(GetOrders.class);
-        Call<List<Order>> call = servise.getFreeOrders();
+        GetOrders service = ApiClient.getRetrofitInstance(token).create(GetOrders.class);
+        Call<List<Order>> call = service.getFreeOrders();
         call.enqueue(new Callback<List<Order>>() {
             @Override
             public void onResponse(Call<List<Order>> call, Response<List<Order>> response) {
-
-                Log.d("authToken", token);
-//                Log.d("gcmToken", String.valueOf(R.string.gcm_token));
-                Log.d(d, String.valueOf(response));
-                List<Order> ordersList = response.body();
-                RecyclerView rv = (RecyclerView) v.findViewById(R.id.available_orders_recycler);
-                OrdersAdapter adapter = new OrdersAdapter(ordersList, getActivity());
-                rv.setAdapter(adapter);
-                rv.setLayoutManager(new LinearLayoutManager(getContext()));
-
-
-
+                if (response.code() == 200) {
+                    Log.d("response code", String.valueOf(response.code()));
+                    List<Order> ordersList = response.body();
+                    bindAdapter(ordersList);
+                }
             }
-
             @Override
             public void onFailure(Call<List<Order>> call, Throwable t) {
-
+                Log.e("loadOrders called", "onFailure");
             }
         });
 
         return v;
     }
 
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
+    }
+    private void bindAdapter(List<Order> list) {
+        adapter = new OrdersAdapter(list, getActivity());
+        rv.setAdapter(adapter);
+        rv.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
-    private void generateDataList(List<Order> orderList) {
-
-        recyclerView = recyclerView.findViewById(R.id.available_orders_recycler);
-        adapter = new OrdersAdapter(orderList, getContext());
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-    }
 }

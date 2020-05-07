@@ -51,7 +51,6 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             item_order = itemView.findViewById(R.id.order_item_id);
-
             orderID = itemView.findViewById(R.id.order_number_view);
             time = itemView.findViewById(R.id.order_time_view);
             p1City = itemView.findViewById(R.id.order_point1_city_view);
@@ -165,18 +164,6 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
                 }
 
 
-//                try {
-//                    if(stringToDate(currentPoint.getArrivalAtTo())==null) {
-//                        arrivalAtTo = null;
-//                        Log.d("arrivalAtTo", String.valueOf(arrivalAtTo));
-//                    } else {
-//                        arrivalAtTo = stringToDate(currentPoint.getArrivalAtTo());
-//                        Log.d("arrivalAtTo", String.valueOf(arrivalAtTo));
-//                    }
-//                } catch (ParseException e) {
-//                    e.printStackTrace();
-//                }
-//
                 Log.d("milliseconds total", String.valueOf(arrivalAtFrom.getTime()));
                 Log.d("Time should be ", "10:00");
                 Log.d("Time", getTimeString(arrivalAtFrom));
@@ -239,7 +226,6 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
             }
         });
 
-
     }
 
 
@@ -259,11 +245,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
     private String getDayMonthString(Date date) {
         SimpleDateFormat dayMonthFormat = new SimpleDateFormat("dd.MM");
         return dayMonthFormat.format(date);
-
     }
-
-
-
 
     @Override
     public int getItemCount() {

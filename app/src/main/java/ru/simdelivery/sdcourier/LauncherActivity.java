@@ -22,6 +22,7 @@ import com.google.firebase.iid.InstanceIdResult;
 
 import java.util.List;
 
+import ru.simdelivery.sdcourier.model.DataLoader;
 import ru.simdelivery.sdcourier.model.Order;
 import ru.simdelivery.sdcourier.view.fragments.LoginFragment;
 import ru.simdelivery.sdcourier.view.fragments.MyOrdersFragment;
@@ -61,8 +62,6 @@ public class LauncherActivity extends AppCompatActivity {
 
                         Log.i("GCM_TOKEN", gcmToken);
 
-                        //Toast.makeText(LauncherActivity.this, token, Toast.LENGTH_SHORT).show();
-
                     }
                 });
 
@@ -74,10 +73,10 @@ public class LauncherActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
 //        bottomNavigationView.setVisibility(View.GONE);
 
-
         sharedPref = getPreferences(Context.MODE_PRIVATE);
         String token = sharedPref.getString(getString(R.string.auth_token), "");
         Log.i("auth_TOKEN", token);
+
         if(!token.equals("")) {
             getSupportFragmentManager()
                     .beginTransaction()
@@ -90,7 +89,6 @@ public class LauncherActivity extends AppCompatActivity {
                     .replace(R.id.fragment_container, new LoginFragment())
                     .commit();
         }
-
     }
 
     public void showIncorrectLogin(){
@@ -107,36 +105,6 @@ public class LauncherActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setVisibility(View.VISIBLE);
     }
-
-    public List<Order> getFreeOrders (String token){
-        List<Order> ordersList = null;
-
-        
-
-        return ordersList;
-    }
-
-    public List<Order> getMyOrders (String token){
-        List<Order> ordersList = null;
-
-
-
-        return ordersList;
-    }
-
-    public List<Order> getHistoryOrders (String token){
-        List<Order> ordersList = null;
-
-
-
-        return ordersList;
-    }
-
-
-
-
-
-
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
@@ -170,10 +138,6 @@ public class LauncherActivity extends AppCompatActivity {
                     fragmentTransaction.commit();
                     return true;
             }
-//            getSupportFragmentManager()
-//                    .beginTransaction()
-//                    .replace(R.id.fragment_container, fragmentTransaction)
-//                    .commit();
             return false;
         }
     };

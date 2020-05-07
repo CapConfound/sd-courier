@@ -12,6 +12,7 @@
     <color name="colorDarkGray">#393838</color>
     <color name="colorGray">#686868</color>
     <color name="colorSpaceGray">#989898</color>
+    <color name="colorLightIshGray">#BDBCBC</color>
     <color name="colorLightGray">#F2F2F2</color>
     <color name="colorStatusFree">#106CF8</color>
     <color name="colorStatusMy">#4A9D62</color>

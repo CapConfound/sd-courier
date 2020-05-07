@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorLightGray"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
@@ -25,20 +26,19 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:layout_marginHorizontal="15dp">
-<!--        <androidx.viewpager.widget.ViewPager-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="320dp"-->
-<!--            android:id="@+id/order_details_viewpager">-->
-
-<!--        </androidx.viewpager.widget.ViewPager>-->
+        android:id="@+id/vp_layout"
+        android:layout_marginTop="65dp">
+        <androidx.viewpager2.widget.ViewPager2
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/order_details_viewpager2"/>
     </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="380dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="50dp"
         android:layout_marginHorizontal="15dp"
         android:orientation="vertical">
 

@@ -22,13 +22,13 @@ public class Address {
     private String house;
     @SerializedName("entrance")
     @Expose
-    private Object entrance;
+    private Integer entrance;
     @SerializedName("floor")
     @Expose
-    private Object floor;
+    private Integer floor;
     @SerializedName("apartment")
     @Expose
-    private Object apartment;
+    private Integer apartment;
     @SerializedName("latitude")
     @Expose
     private Double latitude;
@@ -76,27 +76,27 @@ public class Address {
         this.house = house;
     }
 
-    public Object getEntrance() {
+    public Integer getEntrance() {
         return entrance;
     }
 
-    public void setEntrance(Object entrance) {
+    public void setEntrance(Integer entrance) {
         this.entrance = entrance;
     }
 
-    public Object getFloor() {
+    public Integer getFloor() {
         return floor;
     }
 
-    public void setFloor(Object floor) {
+    public void setFloor(Integer floor) {
         this.floor = floor;
     }
 
-    public Object getApartment() {
+    public Integer getApartment() {
         return apartment;
     }
 
-    public void setApartment(Object apartment) {
+    public void setApartment(Integer apartment) {
         this.apartment = apartment;
     }
 
