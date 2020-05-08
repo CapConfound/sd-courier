@@ -24,60 +24,77 @@ import java.util.List;
 import java.util.TimeZone;
 
 import ru.simdelivery.sdcourier.R;
+import ru.simdelivery.sdcourier.model.Item;
+import ru.simdelivery.sdcourier.model.Order;
 import ru.simdelivery.sdcourier.model.Point;
 
-public class OrdersPageAdapter extends RecyclerView.Adapter<OrdersPageAdapter.ViewHolder> {
+public class MyOrdersPageAdapter extends RecyclerView.Adapter<MyOrdersPageAdapter.ViewHolder> {
 
+    private Order order;
     private List<Point> pointsList;
     Context context;
     SharedPreferences sharedPref;
     private TextView status;
+    private TextView name;
     private TextView city;
     private TextView street;
     private TextView building;
     private TextView apartmentNum;
     private TextView time;
+    private TextView paymentType;
+    private TextView paymentAmount;
+    private Button callBtn;
     private Button commentBtn;
     private Button mapBtn;
     private PackageManager packageManager;
-
-    public OrdersPageAdapter (List<Point> pointsList, Context context) {
-        this.pointsList = pointsList;
-        this.context = context;
-    }
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            status = itemView.findViewById(R.id.order_page_status_view);
-            city = itemView.findViewById(R.id.order_page_city_view);
-            street = itemView.findViewById(R.id.order_page_street_view);
-            building = itemView.findViewById(R.id.order_page_house_view);
-            apartmentNum = itemView.findViewById(R.id.order_page_apartment_view);
-            time = itemView.findViewById(R.id.order_page_time_data_view);
-            commentBtn = itemView.findViewById(R.id.order_page_commentary_button);
-            mapBtn = itemView.findViewById(R.id.order_page_map_button);
+            status = itemView.findViewById(R.id.my_orders_page_status_view);
+            name = itemView.findViewById(R.id.my_orders_page_name_view);
+            city = itemView.findViewById(R.id.my_orders_page_city_view);
+            street = itemView.findViewById(R.id.my_orders_page_street_view);
+            building = itemView.findViewById(R.id.my_orders_page_building_view);
+            apartmentNum = itemView.findViewById(R.id.my_orders_page_apartment_view);
+            time = itemView.findViewById(R.id.my_orders_page_time_view);
+            paymentType = itemView.findViewById(R.id.my_orders_page_payment_type_view);
+            paymentAmount = itemView.findViewById(R.id.my_orders_page_cost_view);
+            callBtn = itemView.findViewById(R.id.my_orders_page_call_btn);
+            commentBtn = itemView.findViewById(R.id.my_orders_page_commentary_btn);
+            mapBtn = itemView.findViewById(R.id.my_orders_page_map_btn);
         }
     }
 
+    public MyOrdersPageAdapter (List<Point> pointsList, Order order , Context context) {
+        this.pointsList = pointsList;
+        this.order = order;
+        this.context = context;
+    }
+
+
     @NonNull
     @Override
-    public OrdersPageAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
+    public MyOrdersPageAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.order_page, parent, false);
+        View view = inflater.inflate(R.layout.my_order_page, parent, false);
 
-        return new ViewHolder(view);
+        return new MyOrdersPageAdapter.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull OrdersPageAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyOrdersPageAdapter.ViewHolder holder, int position) {
+
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         Collections.sort(pointsList);
         Point currentPoint = pointsList.get(position);
-        String statusText = null;
+        String statusText = "Направление";
+        Double lat = currentPoint.getAddress().getLatitude();
+        Double lon = currentPoint.getAddress().getLongitude();
+        String pName = currentPoint.getPerson().getName();
+        String tel = currentPoint.getPerson().getPhone();
         String cityText = currentPoint.getAddress().getLocality().getName();
         String streetText = currentPoint.getAddress().getRoute();
         String buildingText = currentPoint.getAddress().getHouse();
@@ -141,40 +158,78 @@ public class OrdersPageAdapter extends RecyclerView.Adapter<OrdersPageAdapter.Vi
                 statusText = "Куда";
                 break;
         }
-        Double lat = currentPoint.getAddress().getLatitude();
-        Double lon = currentPoint.getAddress().getLongitude();
-        String coordinates = lon+","+lat;
-//        Uri uri = Uri.parse("yandexmaps://?whatshere[point]=30.331346,59.925857999999998&whatshere[zoom]=17");
-        Uri uri = Uri.parse("yandexmaps://?whatshere[point]="+ coordinates +"&whatshere[zoom]=17");
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+
+
+
+
+        String paymentText = "К оплате";
+        String paymentCountText = "";
+
+        String costText = "";
+        int deliveryAndCost = getCost(order) + order.getCost();
+
+        switch (currentPoint.getPaymentObject()) {
+            case "PAYMENT_OBJECT_NOTHING":
+                paymentText = "Оплата не взымается";
+                break;
+            case "PAYMENT_OBJECT_PRODUCTS":
+                paymentText = "Оплата за товары";
+                paymentCountText = costText + "р.";
+                break;
+            case "PAYMENT_OBJECT_DELIVERY":
+                paymentText = "Оплата за доставку";
+                costText = order.getCost() + "р.";
+                break;
+            case "PAYMENT_OBJECT_PRODUCTS_AND_DELIVERY":
+                paymentText = "Оплата за всё";
+                costText = deliveryAndCost + "р.";
+                break;
+        }
+
 
         status.setText(statusText);
-        time.setText(timeText);
+        name.setText(pName);
+        callBtn.setOnClickListener(v -> {
+            openDialer(tel);
+
+        });
         city.setText(cityText);
         street.setText(streetText);
         building.setText(buildingText);
         apartmentNum.setText(apartmentText);
+        time.setText(timeText);
+        mapBtn.setOnClickListener(v -> openMap(lon, lat));
+        paymentType.setText(paymentText);
+        paymentAmount.setText(costText);
+        street.setText(streetText);
+        building.setText(buildingText);
+        apartmentNum.setText(apartmentText);
 
-        commentBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // todo open custom dialog here
+        callBtn.setOnClickListener(v -> {
+            openDialer(tel);
 
-
-
-            }
         });
-        mapBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                openMap(intent);
-            }
+        commentBtn.setOnClickListener(v -> {
+            // todo open custom dialog here
+
+
+
         });
+
 
     }
-    public void openMap(Intent intent) {
 
+    @Override
+    public int getItemCount() {
+        return 2;
+    }
+
+    public void openMap(Double lon, Double lat) {
+        String coordinates = lon+","+lat;
+//        Uri uri = Uri.parse("yandexmaps://?whatshere[point]=30.331346,59.925857999999998&whatshere[zoom]=17");
+        Uri uri = Uri.parse("yandexmaps://?whatshere[point]="+ coordinates +"&whatshere[zoom]=17");
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         // Проверяем, установлено ли хотя бы одно приложение, способное выполнить это действие.
         packageManager = context.getPackageManager();
         List<ResolveInfo> activities = packageManager.queryIntentActivities(intent, 0);
@@ -189,7 +244,12 @@ public class OrdersPageAdapter extends RecyclerView.Adapter<OrdersPageAdapter.Vi
         }
     }
 
-
+    private void openDialer (String tel) {
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        Uri uri = Uri.parse("tel:" + tel);
+        intent.setData(uri);
+        context.startActivity(intent);
+    }
 
     private int getHours(Date date) {
         int utcOffset = TimeZone.getDefault().getOffset(date.getTime()) / 3600000;
@@ -210,12 +270,25 @@ public class OrdersPageAdapter extends RecyclerView.Adapter<OrdersPageAdapter.Vi
         return dayMonthFormat.format(date);
     }
 
-    @Override
-    public int getItemCount() {
-        return pointsList.size();
+    private Integer getCost (Order order) {
+        List<Item> itemList = order.getItems();
+
+
+        Integer cost = null; // Общая стоимость предметов заказа
+        for (Item item : itemList) {
+            if (item != null) {
+                Integer price = item.getProduct().getPrice();
+                Integer count = item.getCount();
+                Integer mult = price * count;
+                Integer discount = item.getDiscount();
+                if (discount != 0){
+                    cost += mult - (mult / 100 * discount);
+                } else {
+                    cost = mult;
+                }
+            }
+        }
+        return cost;
+
     }
-
-
 }
-
-

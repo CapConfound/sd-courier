@@ -35,6 +35,7 @@ public class OrdersFragment extends Fragment {
     DataLoader dataLoader;
     String d = "!!!!!MYDEBUG!!!!!!";
     SharedPreferences sharedPref;
+    LauncherActivity la;
 
 
     @Nullable
@@ -43,7 +44,7 @@ public class OrdersFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_orders_available_view, container, false);
 
         rv = v.findViewById(R.id.available_orders_recycler);
-
+        la = new LauncherActivity();
         sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         String token = sharedPref.getString(getString(R.string.auth_token), "");
 
@@ -56,6 +57,7 @@ public class OrdersFragment extends Fragment {
                     Log.d("response code", String.valueOf(response.code()));
                     List<Order> ordersList = response.body();
                     bindAdapter(ordersList);
+
                 }
             }
             @Override

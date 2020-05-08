@@ -4,7 +4,8 @@
     android:layout_marginHorizontal="5dp"
     android:background="@drawable/background_item_order"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <LinearLayout android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="10dp"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -18,7 +19,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
 
-                android:id="@+id/order_page_pick_up_status_view"
+                android:id="@+id/order_page_status_view"
 
                 android:text="Откуда"
                 android:textSize="26sp"
@@ -41,7 +42,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
-                android:id="@+id/order_page_pick_up_city_view"
+                android:id="@+id/order_page_city_view"
 
                 android:textSize="20sp"
                 android:textColor="@color/colorDarkGray"
@@ -65,7 +66,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
-                android:id="@+id/order_page_pick_up_street_view"
+                android:id="@+id/order_page_street_view"
 
                 android:maxWidth="300dp"
                 android:textSize="20sp"
@@ -91,7 +92,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
-                android:id="@+id/order_page_pick_up_house_view"
+                android:id="@+id/order_page_house_view"
 
                 android:textSize="20sp"
                 android:textColor="@color/colorDarkGray"
@@ -115,7 +116,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
-                android:id="@+id/order_page_pick_up_apartment_view"
+                android:id="@+id/order_page_apartment_view"
 
                 android:textSize="20sp"
                 android:textColor="@color/colorDarkGray"
@@ -130,11 +131,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
-                android:id="@+id/order_page_pick_up_time_data_view"
+                android:id="@+id/order_page_time_data_view"
 
                 android:textSize="26sp"
                 android:textColor="@color/colorDarkGray"
-                android:fontFamily="@font/manrope_bold"
+                android:fontFamily="@font/manrope_regular"
                 android:layout_centerInParent="true"
                 android:text="25.03 как можно скорее"/>
         </RelativeLayout>
@@ -155,7 +156,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
-                android:id="@+id/order_page_pick_up_commentary_button"
+                android:id="@+id/order_page_commentary_button"
 
                 android:paddingHorizontal="5dp"
                 android:textSize="16sp"
@@ -163,7 +164,7 @@
                 android:fontFamily="@font/manrope_bold"
                 app:layout_constraintRight_toRightOf="parent"
                 style="@style/Widget.AppCompat.Button.Borderless"
-                android:background="@drawable/background_button_show"
+                android:background="@drawable/background_button_blue"
                 android:text="Показать"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -183,7 +184,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
-                android:id="@+id/order_page_pick_up_map_button"
+                android:id="@+id/order_page_map_button"
 
                 android:paddingHorizontal="5dp"
                 android:textSize="16sp"
@@ -191,7 +192,7 @@
                 android:fontFamily="@font/manrope_bold"
                 app:layout_constraintRight_toRightOf="parent"
                 style="@style/Widget.AppCompat.Button.Borderless"
-                android:background="@drawable/background_button_show"
+                android:background="@drawable/background_button_blue"
                 android:text="Показать"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 

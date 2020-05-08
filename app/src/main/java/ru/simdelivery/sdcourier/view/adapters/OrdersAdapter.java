@@ -81,20 +81,21 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
         ViewHolder viewHolder = new ViewHolder(orderView);
 
 
-
-        viewHolder.item_order.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View v) {
-                 Toast.makeText(context, "test click" + String.valueOf(viewHolder.getAdapterPosition()), Toast.LENGTH_SHORT).show();
-                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                 OrderDetailsFragment fragment = new OrderDetailsFragment();
-                 activity.getSupportFragmentManager()
-                             .beginTransaction()
-                             .replace(R.id.fragment_container, fragment)
-                             .commit();
-
-             }
-        });
+//      я не знаю почему, но у меня было 2 onClickListener`а
+//        viewHolder.item_order.setOnClickListener(new View.OnClickListener() {
+//             @Override
+//             public void onClick(View v) {
+//                 Toast.makeText(context, "test click" + String.valueOf(viewHolder.getAdapterPosition()), Toast.LENGTH_SHORT).show();
+//                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
+//                 OrderDetailsFragment fragment = new OrderDetailsFragment();
+//                 activity.getSupportFragmentManager()
+//                             .beginTransaction()
+//                             .replace(R.id.fragment_container, fragment)
+//                             .addToBackStack(null)
+//                             .commit();
+//
+//             }
+//        });
 
 
         return viewHolder;
@@ -220,6 +221,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
                 activity.getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.fragment_container, fragment)
+                        .addToBackStack(null)
                         .commit();
 
 

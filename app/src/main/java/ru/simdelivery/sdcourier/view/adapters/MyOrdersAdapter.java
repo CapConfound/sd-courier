@@ -1,13 +1,17 @@
 package ru.simdelivery.sdcourier.view.adapters;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.ParseException;
@@ -20,6 +24,8 @@ import ru.simdelivery.sdcourier.R;
 import ru.simdelivery.sdcourier.model.Address;
 import ru.simdelivery.sdcourier.model.Order;
 import ru.simdelivery.sdcourier.model.Point;
+import ru.simdelivery.sdcourier.view.fragments.details.MyOrderDetailsFragment;
+import ru.simdelivery.sdcourier.view.fragments.details.OrderDetailsFragment;
 
 public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.MyViewHolder> {
 
@@ -28,14 +34,15 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.MyView
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView orderID;
+        ConstraintLayout item_order;
         TextView time;
         TextView p1City;
         TextView p1Address;
         TextView p2City;
         TextView p2Address;
-
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
+            item_order = itemView.findViewById(R.id.my_order_item_id);
             orderID = itemView.findViewById(R.id.my_order_number_view);
             time = itemView.findViewById(R.id.my_order_time_view);
             p1City = itemView.findViewById(R.id.my_order_point1_city_view);
@@ -176,6 +183,27 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.MyView
         v.p1Address.setText(address1);
         v.p2City.setText(city2);
         v.p2Address.setText(address2);
+        v.item_order.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "test click" + orderListResult.get(position).getId(), Toast.LENGTH_SHORT).show();
+
+                Integer id = orderListResult.get(position).getId();
+                Log.d("id", String.valueOf(id));
+                AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                MyOrderDetailsFragment fragment = new MyOrderDetailsFragment();
+                Bundle bundle = new Bundle();
+                bundle.putInt("id", id);
+                Log.d("position is", String.valueOf(position));
+                bundle.putInt("position", position);
+                fragment.setArguments(bundle);
+                activity.getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, fragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
 
 
     }

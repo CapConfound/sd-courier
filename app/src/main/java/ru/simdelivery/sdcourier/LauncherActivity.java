@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -95,6 +97,11 @@ public class LauncherActivity extends AppCompatActivity {
         TextView warning = findViewById(R.id.login_incorrect_view);
         warning.setVisibility(View.VISIBLE);
     }
+
+//    public void hideLoadingAnim() {
+//        ProgressBar bar = findViewById(R.id.loadingPanel);
+//        bar.setVisibility(View.GONE);
+//    }
 
     public void setNavGone() {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);

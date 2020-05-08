@@ -52,8 +52,6 @@ public class OrderDetailsFragment extends Fragment {
     private Dialog dialog;
 
 
-
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -63,10 +61,6 @@ public class OrderDetailsFragment extends Fragment {
         showItemsBtn = v.findViewById(R.id.order_details_items_button);
         idView = v.findViewById(R.id.order_details_id);
         viewPager2 = v.findViewById(R.id.order_details_viewpager2);
-
-
-
-
         sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         String token = sharedPref.getString(getString(R.string.auth_token), "");
 
@@ -83,18 +77,14 @@ public class OrderDetailsFragment extends Fragment {
                     if (bundle != null) {
                         position = bundle.getInt("position", 0);
                     }
-
                     Order currentOrder = ordersList.get(position);
                     String idText = "Заказ № " + currentOrder.getId();
                     idView.setText(idText);
-                    List<Item> orderItemList = currentOrder.getItems(); // список предметов в заказе для диалога с количеством
                     List<Point> pointsList = currentOrder.getPoints();
                     List<Item> itemsList = currentOrder.getItems();
-
                     OrdersPageAdapter adapter = new OrdersPageAdapter(pointsList, getContext());
                     viewPager2.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
                     viewPager2.setAdapter(adapter);
-
                     dialog = new Dialog(getContext(), R.style.AppTheme);
                     showItemsBtn.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -102,7 +92,6 @@ public class OrderDetailsFragment extends Fragment {
                             Button closeBtn;
                             RecyclerView rv;
                             DialogRecyclerAdapter adapter;
-
                             dialog.setContentView(R.layout.dialog_order_items_list_view);
                             closeBtn = dialog.findViewById(R.id.dialog_close_btn);
                             rv = dialog.findViewById(R.id.dialog_recycler);
@@ -120,45 +109,12 @@ public class OrderDetailsFragment extends Fragment {
                             Log.d("dialog button", "done");
                         }
                     });
-
-
-
-
-//                    Integer cost = null; // Общая стоимость предметов заказа
-//                    for (Item i: orderItemList) {
-//                        if (i != null) {
-//                            Integer price = i.getProduct().getPrice();
-//                            Integer count = i.getCount();
-//                            Integer mult = price * count;
-//                            Integer discount = i.getDiscount();
-//                            if (discount != 0){
-//                                cost += mult - (mult / 100 * discount);
-//                            } else {
-//                                cost = mult;
-//                            }
-//
-//                        }
-//                    }
                 }
-
-
-
-
             }
-
             @Override
             public void onFailure(Call<List<Order>> call, Throwable t) {
-
             }
         });
-
-
-
-
-
-
-
-
         return v;
     }
 
