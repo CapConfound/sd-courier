@@ -30,6 +30,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import ru.simdelivery.sdcourier.LauncherActivity;
 import ru.simdelivery.sdcourier.R;
 import ru.simdelivery.sdcourier.model.Item;
 import ru.simdelivery.sdcourier.model.Order;
@@ -40,6 +41,7 @@ import ru.simdelivery.sdcourier.view.adapters.DialogRecyclerAdapter;
 import ru.simdelivery.sdcourier.view.adapters.MyOrdersPageAdapter;
 
 public class MyOrderDetailsFragment extends Fragment {
+
 
     private SharedPreferences sharedPref;
     private TextView idView;
@@ -60,13 +62,16 @@ public class MyOrderDetailsFragment extends Fragment {
         viewPager2 = v.findViewById(R.id.my_order_details_viewpager2);
         sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         String token = sharedPref.getString(getString(R.string.auth_token), "");
-
+        LauncherActivity la = (LauncherActivity) getActivity();
+        assert la != null;
         GetMyOrders service = ApiClient.getRetrofitInstance(token).create(GetMyOrders.class);
         Call<List<Order>> call = service.getMyOrders();
+        la.showProgressBar();
         call.enqueue(new Callback<List<Order>>() {
             @Override
             public void onResponse(Call<List<Order>> call, Response<List<Order>> response) {
                 if(response.code() == 200) {
+                    la.hideProgressBar();
                     List<Order> ordersList = response.body();
                     Integer position = 0;
                     Bundle bundle = getArguments();
@@ -78,7 +83,7 @@ public class MyOrderDetailsFragment extends Fragment {
                     idView.setText(idText);
                     List<Point> pointsList = currentOrder.getPoints();
                     List<Item> itemsList = currentOrder.getItems();
-                    MyOrdersPageAdapter adapter = new MyOrdersPageAdapter(pointsList, currentOrder, getContext());
+                    MyOrdersPageAdapter adapter = new MyOrdersPageAdapter(currentOrder, getContext());
                     viewPager2.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
                     viewPager2.setAdapter(adapter);
                     dialog = new Dialog(getContext(), R.style.AppTheme);

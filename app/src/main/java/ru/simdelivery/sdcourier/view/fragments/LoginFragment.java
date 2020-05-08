@@ -23,9 +23,6 @@ import ru.simdelivery.sdcourier.LauncherActivity;
 import ru.simdelivery.sdcourier.R;
 import ru.simdelivery.sdcourier.model.Auth;
 import ru.simdelivery.sdcourier.model.AuthResponse;
-import ru.simdelivery.sdcourier.model.DataLoader;
-import ru.simdelivery.sdcourier.model.savedData.SavedOrders;
-import ru.simdelivery.sdcourier.model.savedData.SavedUser;
 import ru.simdelivery.sdcourier.network.ApiClient;
 import ru.simdelivery.sdcourier.network.GetUserToken;
 
@@ -67,15 +64,18 @@ public class LoginFragment extends Fragment {
         GetUserToken service = ApiClient.getAuthData().create(GetUserToken.class);
 
         Call<AuthResponse> call = service.getAuthResponse(data);
+        la.showProgressBar();
         call.enqueue(new Callback<AuthResponse>() {
             @Override
             public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
 
                 if(response.code() == 401){
+                    la.hideProgressBar();
                     Toast.makeText(getContext(), "Введённые данные неверны", Toast.LENGTH_SHORT).show();
                     la.showIncorrectLogin();
                 }
                 else {
+                    la.hideProgressBar();
                     Log.d("код не 401", "точно");
                     AuthResponse userData = response.body();
                     Log.d("response.body()", response.toString());
@@ -87,8 +87,6 @@ public class LoginFragment extends Fragment {
                     //insert token into SharedPreferences
                     editor.putString(getString(R.string.auth_token), token);
                     editor.commit();
-                    DataLoader dl = new DataLoader();
-                    dl.loadAllOrders(token);
                     openApp();
 //                Log.d("token", String.valueOf(response.body().getToken()));
                 }

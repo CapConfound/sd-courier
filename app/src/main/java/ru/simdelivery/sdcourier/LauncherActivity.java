@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -22,10 +21,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
-import java.util.List;
-
-import ru.simdelivery.sdcourier.model.DataLoader;
-import ru.simdelivery.sdcourier.model.Order;
 import ru.simdelivery.sdcourier.view.fragments.LoginFragment;
 import ru.simdelivery.sdcourier.view.fragments.MyOrdersFragment;
 import ru.simdelivery.sdcourier.view.fragments.OrdersFragment;
@@ -98,10 +93,16 @@ public class LauncherActivity extends AppCompatActivity {
         warning.setVisibility(View.VISIBLE);
     }
 
-//    public void hideLoadingAnim() {
-//        ProgressBar bar = findViewById(R.id.loadingPanel);
-//        bar.setVisibility(View.GONE);
-//    }
+
+    public void showProgressBar() {
+        ProgressBar bar = findViewById(R.id.progress_circular);
+        bar.setVisibility(View.VISIBLE);
+    }
+
+    public void hideProgressBar() {
+        ProgressBar bar = findViewById(R.id.progress_circular);
+        bar.setVisibility(View.GONE);
+    }
 
     public void setNavGone() {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);

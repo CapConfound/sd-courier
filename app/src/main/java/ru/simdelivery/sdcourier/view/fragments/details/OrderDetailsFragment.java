@@ -44,6 +44,7 @@ import ru.simdelivery.sdcourier.view.fragments.LoginFragment;
 
 public class OrderDetailsFragment extends Fragment {
 
+
     private SharedPreferences sharedPref;
     private TextView idView;
     private Button acceptOrderBtn;
@@ -63,14 +64,18 @@ public class OrderDetailsFragment extends Fragment {
         viewPager2 = v.findViewById(R.id.order_details_viewpager2);
         sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         String token = sharedPref.getString(getString(R.string.auth_token), "");
-
+        LauncherActivity la = (LauncherActivity) getActivity();
+        assert la != null;
         GetOrders service = ApiClient.getRetrofitInstance(token).create(GetOrders.class);
         Call<List<Order>> call = service.getFreeOrders();
+
+        la.showProgressBar();
         call.enqueue(new Callback<List<Order>>() {
             @Override
             public void onResponse(Call<List<Order>> call, Response<List<Order>> response) {
                 Log.d("response code", String.valueOf(response.code()));
                 if(response.code() == 200) {
+                    la.hideProgressBar();
                     List<Order> ordersList = response.body();
                     Integer position = 0;
                     Bundle bundle = getArguments();

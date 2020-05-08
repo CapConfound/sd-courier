@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +32,6 @@ import ru.simdelivery.sdcourier.model.Point;
 public class MyOrdersPageAdapter extends RecyclerView.Adapter<MyOrdersPageAdapter.ViewHolder> {
 
     private Order order;
-    private List<Point> pointsList;
     Context context;
     SharedPreferences sharedPref;
     private TextView status;
@@ -67,8 +67,7 @@ public class MyOrdersPageAdapter extends RecyclerView.Adapter<MyOrdersPageAdapte
         }
     }
 
-    public MyOrdersPageAdapter (List<Point> pointsList, Order order , Context context) {
-        this.pointsList = pointsList;
+    public MyOrdersPageAdapter (Order order, Context context) {
         this.order = order;
         this.context = context;
     }
@@ -88,6 +87,7 @@ public class MyOrdersPageAdapter extends RecyclerView.Adapter<MyOrdersPageAdapte
     public void onBindViewHolder(@NonNull MyOrdersPageAdapter.ViewHolder holder, int position) {
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        List<Point> pointsList = order.getPoints();
         Collections.sort(pointsList);
         Point currentPoint = pointsList.get(position);
         String statusText = "Направление";
@@ -107,46 +107,52 @@ public class MyOrdersPageAdapter extends RecyclerView.Adapter<MyOrdersPageAdapte
         int hour2 = 0;
         int minutes2 = 0;
 
-        try {
-            arrivalAtFrom = sdf.parse(currentPoint.getArrivalAtFrom());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        if(String.valueOf(currentPoint.getArrivalAtTo()).equals("null")) {
-            timeText = getDayMonthString(arrivalAtFrom) + " как можно скорее";
-
-
-        } else {
+        if (currentPoint.getArrivalAtFrom() != null){
             try {
-                arrivalAtTo = sdf.parse(currentPoint.getArrivalAtTo());
+                arrivalAtFrom = sdf.parse(currentPoint.getArrivalAtFrom());
             } catch (ParseException e) {
                 e.printStackTrace();
+                timeText = "Время задано неверно";
             }
-            hour1 = getHours(arrivalAtFrom);
 
-            hour2 = getHours(arrivalAtTo);
+            if (String.valueOf(currentPoint.getArrivalAtTo()).equals("null")) {
+                timeText = getDayMonthString(arrivalAtFrom) + " как можно скорее";
 
-            minutes1 = getMinutes(arrivalAtFrom);
-            minutes2 = getMinutes(arrivalAtTo);
 
-            if(hour1 == hour2) {
-                if(minutes1 == minutes2) {
-                    timeText = getDayMonthString(arrivalAtFrom) + " ровно в " + getTimeString(arrivalAtFrom);
+            } else {
+                try {
+                    arrivalAtTo = sdf.parse(currentPoint.getArrivalAtTo());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    timeText = "Время задано неверно";
+                }
+                hour1 = getHours(arrivalAtFrom);
+
+                hour2 = getHours(arrivalAtTo);
+
+                minutes1 = getMinutes(arrivalAtFrom);
+                minutes2 = getMinutes(arrivalAtTo);
+
+                if (hour1 == hour2) {
+                    if (minutes1 == minutes2) {
+                        timeText = getDayMonthString(arrivalAtFrom) + " ровно в " + getTimeString(arrivalAtFrom);
+                    } else {
+                        timeText = getDayMonthString(arrivalAtFrom) + " c " + getTimeString(arrivalAtFrom) + " до " + getTimeString(arrivalAtTo);
+                    }
                 } else {
                     timeText = getDayMonthString(arrivalAtFrom) + " c " + getTimeString(arrivalAtFrom) + " до " + getTimeString(arrivalAtTo);
                 }
-            } else {
-                timeText = getDayMonthString(arrivalAtFrom) + " c " + getTimeString(arrivalAtFrom) + " до " + getTimeString(arrivalAtTo);
             }
+        } else {
+            timeText = "Время задано неверно";
         }
 
-        Log.d("OrdersPageAdapter", "mess starts mow");
-        Log.d("milliseconds total", String.valueOf(arrivalAtFrom.getTime()));
-        Log.d("Time should be ", "10:00");
-        Log.d("Time", getTimeString(arrivalAtFrom));
-        Log.d("date is" , String.valueOf(arrivalAtFrom.getDate())+"."+String.valueOf(arrivalAtFrom.getMonth()));
-        Log.d("formattedDate", getDayMonthString(arrivalAtFrom));
+//        Log.d("MyOrdersPageAdapter", "mess starts mow");
+//        Log.d("milliseconds total", String.valueOf(arrivalAtFrom.getTime()));
+//        Log.d("Time should be ", "10:00");
+//        Log.d("Time", getTimeString(arrivalAtFrom));
+//        Log.d("date is" , String.valueOf(arrivalAtFrom.getDate())+"."+String.valueOf(arrivalAtFrom.getMonth()));
+//        Log.d("formattedDate", getDayMonthString(arrivalAtFrom));
 
 
 
@@ -189,10 +195,7 @@ public class MyOrdersPageAdapter extends RecyclerView.Adapter<MyOrdersPageAdapte
 
         status.setText(statusText);
         name.setText(pName);
-        callBtn.setOnClickListener(v -> {
-            openDialer(tel);
-
-        });
+        callBtn.setOnClickListener(v -> openDialer(tel));
         city.setText(cityText);
         street.setText(streetText);
         building.setText(buildingText);
@@ -204,19 +207,10 @@ public class MyOrdersPageAdapter extends RecyclerView.Adapter<MyOrdersPageAdapte
         street.setText(streetText);
         building.setText(buildingText);
         apartmentNum.setText(apartmentText);
-
-        callBtn.setOnClickListener(v -> {
-            openDialer(tel);
-
-        });
-
+        callBtn.setOnClickListener(v -> openDialer(tel));
         commentBtn.setOnClickListener(v -> {
             // todo open custom dialog here
-
-
-
         });
-
 
     }
 

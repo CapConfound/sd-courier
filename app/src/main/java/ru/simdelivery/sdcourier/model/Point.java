@@ -31,7 +31,7 @@ public class Point implements Comparable<Point> {
 
     @SerializedName("commentary")
     @Expose
-    private Object commentary;
+    private String commentary;
 
     @SerializedName("paymentObject")
     @Expose
@@ -89,11 +89,11 @@ public class Point implements Comparable<Point> {
         }
     }
 
-    public Object getCommentary() {
+    public String getCommentary() {
         return commentary;
     }
 
-    public void setCommentary(Object commentary) {
+    public void setCommentary(String commentary) {
         this.commentary = commentary;
     }
 
