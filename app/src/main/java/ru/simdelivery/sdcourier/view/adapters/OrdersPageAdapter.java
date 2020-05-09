@@ -1,10 +1,13 @@
 package ru.simdelivery.sdcourier.view.adapters;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,6 +42,7 @@ public class OrdersPageAdapter extends RecyclerView.Adapter<OrdersPageAdapter.Vi
     private TextView time;
     private Button commentBtn;
     private Button mapBtn;
+    private Dialog dialog;
     private PackageManager packageManager;
 
     public OrdersPageAdapter (List<Point> pointsList, Context context) {
@@ -148,6 +152,18 @@ public class OrdersPageAdapter extends RecyclerView.Adapter<OrdersPageAdapter.Vi
         Uri uri = Uri.parse("yandexmaps://?whatshere[point]="+ coordinates +"&whatshere[zoom]=17");
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 
+        Integer entrance = currentPoint.getAddress().getEntrance();
+        Integer floor = currentPoint.getAddress().getFloor();
+
+        String commentText = "";
+
+        if (entrance != null) {
+            commentText += "Подъезд: " + entrance + "\n";
+        }
+        if (floor != null) {
+            commentText += "Этаж: " + floor + "\n";
+        }
+
         status.setText(statusText);
         time.setText(timeText);
         city.setText(cityText);
@@ -159,6 +175,27 @@ public class OrdersPageAdapter extends RecyclerView.Adapter<OrdersPageAdapter.Vi
             @Override
             public void onClick(View v) {
                 // todo open custom dialog here
+                String commentText = "";
+
+                if (entrance != null) {
+                    commentText += "Подъезд: " + entrance + "\n";
+                }
+                if (floor != null) {
+                    commentText += "Этаж: " + floor + "\n";
+                }
+                dialog = new Dialog(context, R.style.AppTheme);
+                dialog.setContentView(R.layout.dialog_comments);
+                Button closeBtn = dialog.findViewById(R.id.dialog_close_btn);
+                TextView content = dialog.findViewById(R.id.comment_view);
+                if (commentText.equals("")){
+                    commentText = "Тут ничего нет";
+                }
+                content.setText(commentText);
+                closeBtn.setOnClickListener(v1 -> {
+                    dialog.dismiss();
+                });
+                dialog.show();
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
 
 

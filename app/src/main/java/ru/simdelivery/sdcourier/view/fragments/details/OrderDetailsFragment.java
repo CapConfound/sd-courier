@@ -66,10 +66,11 @@ public class OrderDetailsFragment extends Fragment {
         String token = sharedPref.getString(getString(R.string.auth_token), "");
         LauncherActivity la = (LauncherActivity) getActivity();
         assert la != null;
+        la.showProgressBar();
         GetOrders service = ApiClient.getRetrofitInstance(token).create(GetOrders.class);
         Call<List<Order>> call = service.getFreeOrders();
 
-        la.showProgressBar();
+
         call.enqueue(new Callback<List<Order>>() {
             @Override
             public void onResponse(Call<List<Order>> call, Response<List<Order>> response) {

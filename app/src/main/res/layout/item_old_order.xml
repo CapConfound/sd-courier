@@ -26,67 +26,23 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/status_background_free_order"
-                    android:paddingHorizontal="10dp"
+                    android:paddingHorizontal="5dp"
+                    android:paddingVertical="2dp"
+                    android:layout_marginEnd="20dp"
 
-                    android:id="@+id/my_order_number_view"
+                    android:id="@+id/order_history_number_view"
 
+                    android:background="@drawable/gray_tag"
                     android:text="№ 12345"
                     android:textSize="18sp"
-                    android:textColor="@color/colorPrimary"
+                    android:textColor="@color/colorDarkGray"
                     android:fontFamily="@font/manrope_light"/>
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_weight="3">
-                <TextView
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-
-                    android:id="@+id/my_order_point1_city_view"
-
-                    android:layout_marginRight="10dp"
-
-                    android:maxLines="2"
-                    android:layout_gravity="center_vertical"
-                    android:text="Казань"
-                    android:textSize="20sp"
-                    android:textColor="@color/colorDarkGray"
-                    android:fontFamily="@font/manrope_bold"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
 
-                    android:id="@+id/my_order_point1_address_view"
-
-                    android:maxLines="2"
-                    android:layout_gravity="center_vertical"
-                    android:text="Хлебопекарная 65А"
-                    android:textSize="20sp"
-                    android:textColor="@color/colorGray"
-                    android:fontFamily="@font/manrope_regular"/>
-
-            </LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:layout_marginTop="3dp"
-                android:background="@color/colorSpaceGray"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:layout_weight="3">
-                <TextView
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-
-                    android:id="@+id/my_order_point2_city_view"
+                    android:id="@+id/order_history_point2_city_view"
 
 
                     android:layout_marginRight="10dp"
@@ -95,14 +51,27 @@
                     android:maxLines="2"
                     android:layout_gravity="center_vertical"
                     android:text="Санкт-Петербугр"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:textColor="@color/colorDarkGray"
                     android:fontFamily="@font/manrope_bold"/>
+
+            </LinearLayout>
+
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="3">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="10"
 
-                    android:id="@+id/my_order_point2_address_view"
+                    android:id="@+id/order_history_point2_address_view"
 
                     android:maxLines="2"
                     android:layout_gravity="center_vertical"
@@ -111,25 +80,26 @@
                     android:textColor="@color/colorDarkGray"
                     android:fontFamily="@font/manrope_regular"/>
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+
+                    android:id="@+id/order_history_time_view"
+
+                    android:layout_gravity="center"
+                    android:layout_marginVertical="10dp"
+                    android:layout_marginEnd="20dp"
+                    android:text="24.05"
+                    android:textSize="18sp"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorDarkGray"
+                    android:fontFamily="@font/manrope_regular"/>
             </LinearLayout>
+
 
         </LinearLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="30"
-
-            android:id="@+id/my_order_time_view"
-
-            android:layout_gravity="center"
-            android:layout_marginVertical="10dp"
-            android:layout_marginEnd="20dp"
-            android:text="24.05\n22:00\n-\n23:00"
-            android:textSize="18sp"
-            android:textAlignment="center"
-            android:textColor="@color/colorDarkGray"
-            android:fontFamily="@font/manrope_regular"/>
     </LinearLayout>
 
 

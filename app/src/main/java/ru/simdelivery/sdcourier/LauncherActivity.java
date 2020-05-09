@@ -1,6 +1,7 @@
 package ru.simdelivery.sdcourier;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -8,11 +9,14 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -95,12 +99,12 @@ public class LauncherActivity extends AppCompatActivity {
 
 
     public void showProgressBar() {
-        ProgressBar bar = findViewById(R.id.progress_circular);
+        RelativeLayout bar = findViewById(R.id.progress_circular);
         bar.setVisibility(View.VISIBLE);
     }
 
     public void hideProgressBar() {
-        ProgressBar bar = findViewById(R.id.progress_circular);
+        RelativeLayout bar = findViewById(R.id.progress_circular);
         bar.setVisibility(View.GONE);
     }
 
@@ -114,40 +118,37 @@ public class LauncherActivity extends AppCompatActivity {
         bottomNavigationView.setVisibility(View.VISIBLE);
     }
 
-    private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            Fragment selectedFragment = null;
-            FragmentTransaction fragmentTransaction;
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            OrdersFragment ordersFragment = new OrdersFragment();
-            MyOrdersFragment myOrdersFragment = new MyOrdersFragment();
-            ProfileFragment profileFragment = new ProfileFragment();
-            switch (item.getItemId()){
-                case R.id.nav_new_orders:
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener = item -> {
+
+        FragmentTransaction fragmentTransaction;
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        OrdersFragment ordersFragment = new OrdersFragment();
+        MyOrdersFragment myOrdersFragment = new MyOrdersFragment();
+        ProfileFragment profileFragment = new ProfileFragment();
+        switch (item.getItemId()){
+            case R.id.nav_new_orders:
 //                    selectedFragment = new OrdersFragment();
 
-                    fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.fragment_container, ordersFragment);
-                    fragmentTransaction.commit();
-                    return true;
-                case R.id.nav_my_orders:
+                fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, ordersFragment);
+                fragmentTransaction.commit();
+                return true;
+            case R.id.nav_my_orders:
 //                    selectedFragment = new MyOrdersFragment();
 
-                    fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.fragment_container, myOrdersFragment);
-                    fragmentTransaction.commit();
-                    return true;
-                case R.id.nav_profile:
+                fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, myOrdersFragment);
+                fragmentTransaction.commit();
+                return true;
+            case R.id.nav_profile:
 //                    selectedFragment = new ProfileFragment();
 
-                    fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.fragment_container, profileFragment);
-                    fragmentTransaction.commit();
-                    return true;
-            }
-            return false;
+                fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, profileFragment);
+                fragmentTransaction.commit();
+                return true;
         }
+        return false;
     };
 
 }

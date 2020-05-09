@@ -47,6 +47,7 @@ public class MyOrderDetailsFragment extends Fragment {
     private TextView idView;
     private Button acceptPaymentBtn;
     private Button showItemsBtn;
+    private Button endOrder;
     private ViewPager2 viewPager2;
     private Dialog dialog;
 
@@ -58,6 +59,7 @@ public class MyOrderDetailsFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_my_order_details, container, false);
         acceptPaymentBtn = v.findViewById(R.id.my_order_details_accept_payment_button);
         showItemsBtn = v.findViewById(R.id.my_order_details_items_button);
+        endOrder = v.findViewById(R.id.my_order_details_end_order_button);
         idView = v.findViewById(R.id.my_order_details_id);
         viewPager2 = v.findViewById(R.id.my_order_details_viewpager2);
         sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
@@ -101,6 +103,9 @@ public class MyOrderDetailsFragment extends Fragment {
                         dialog.show();
                         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                         Log.d("dialog button", "done");
+                    });
+                    endOrder.setOnClickListener(v2 -> {
+                        //todo запрос на изменение статуса
                     });
 
                 }

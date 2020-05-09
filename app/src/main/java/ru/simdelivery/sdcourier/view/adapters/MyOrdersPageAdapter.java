@@ -1,5 +1,6 @@
 package ru.simdelivery.sdcourier.view.adapters;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -46,6 +47,7 @@ public class MyOrdersPageAdapter extends RecyclerView.Adapter<MyOrdersPageAdapte
     private Button callBtn;
     private Button commentBtn;
     private Button mapBtn;
+    private Dialog dialog;
     private PackageManager packageManager;
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -147,15 +149,6 @@ public class MyOrdersPageAdapter extends RecyclerView.Adapter<MyOrdersPageAdapte
             timeText = "Время задано неверно";
         }
 
-//        Log.d("MyOrdersPageAdapter", "mess starts mow");
-//        Log.d("milliseconds total", String.valueOf(arrivalAtFrom.getTime()));
-//        Log.d("Time should be ", "10:00");
-//        Log.d("Time", getTimeString(arrivalAtFrom));
-//        Log.d("date is" , String.valueOf(arrivalAtFrom.getDate())+"."+String.valueOf(arrivalAtFrom.getMonth()));
-//        Log.d("formattedDate", getDayMonthString(arrivalAtFrom));
-
-
-
         switch (currentPoint.getNumber()) {
             case 1:
                 statusText = "Откуда";
@@ -167,12 +160,11 @@ public class MyOrdersPageAdapter extends RecyclerView.Adapter<MyOrdersPageAdapte
 
 
 
-
         String paymentText = "К оплате";
         String paymentCountText = "";
 
         String costText = "";
-        int deliveryAndCost = getCost(order) + order.getCost();
+        int deliveryAndCost = getItemCost(order) + order.getCost();
 
         switch (currentPoint.getPaymentObject()) {
             case "PAYMENT_OBJECT_NOTHING":
@@ -180,7 +172,7 @@ public class MyOrdersPageAdapter extends RecyclerView.Adapter<MyOrdersPageAdapte
                 break;
             case "PAYMENT_OBJECT_PRODUCTS":
                 paymentText = "Оплата за товары";
-                paymentCountText = costText + "р.";
+                costText = getItemCost(order) + "р.";
                 break;
             case "PAYMENT_OBJECT_DELIVERY":
                 paymentText = "Оплата за доставку";
@@ -264,7 +256,7 @@ public class MyOrdersPageAdapter extends RecyclerView.Adapter<MyOrdersPageAdapte
         return dayMonthFormat.format(date);
     }
 
-    private Integer getCost (Order order) {
+    private Integer getItemCost (Order order) {
         List<Item> itemList = order.getItems();
 
 

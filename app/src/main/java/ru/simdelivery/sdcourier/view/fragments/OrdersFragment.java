@@ -39,24 +39,28 @@ public class OrdersFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_orders_available_view, container, false);
-        context = getActivity();
-        rv = v.findViewById(R.id.available_orders_recycler);
         LauncherActivity la = (LauncherActivity) getActivity();
         assert la != null;
+        la.showProgressBar();
+        context = getActivity();
+        rv = v.findViewById(R.id.available_orders_recycler);
+
+
         sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         String token = sharedPref.getString(getString(R.string.auth_token), "");
 
         GetOrders service = ApiClient.getRetrofitInstance(token).create(GetOrders.class);
         Call<List<Order>> call = service.getFreeOrders();
-        la.showProgressBar();
+
         call.enqueue(new Callback<List<Order>>() {
             @Override
             public void onResponse(Call<List<Order>> call, Response<List<Order>> response) {
                 if (response.code() == 200) {
-                    la.hideProgressBar();
+
                     Log.d("response code", String.valueOf(response.code()));
                     List<Order> ordersList = response.body();
                     bindAdapter(ordersList);
+                    la.hideProgressBar();
 
                 }
             }
@@ -79,6 +83,7 @@ public class OrdersFragment extends Fragment {
         adapter = new OrdersAdapter(list, getActivity());
         rv.setAdapter(adapter);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
+
     }
 
 }
