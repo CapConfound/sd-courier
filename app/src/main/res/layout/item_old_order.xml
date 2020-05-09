@@ -32,7 +32,7 @@
 
                     android:id="@+id/order_history_number_view"
 
-                    android:background="@drawable/gray_tag"
+                    android:background="@drawable/tag_gray"
                     android:text="№ 12345"
                     android:textSize="18sp"
                     android:textColor="@color/colorDarkGray"

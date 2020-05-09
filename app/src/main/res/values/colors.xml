@@ -2,8 +2,8 @@
 <resources>
     <color name="colorLiteBlue">#E4EEFB</color>
 
-    <color name="colorOrdersTaken">#4A9D62</color>
-    <color name="colorOrdersTakenLite">#BBE1C6</color>
+    <color name="colorGreen">#4A9D62</color>
+    <color name="colorLiteGreen">#BBE1C6</color>
     <color name="colorOrange">#FF9800</color>
     <color name="colorRed">#F35252</color>
     <color name="colorAccentLite">#106CF8</color>
@@ -17,5 +17,5 @@
     <color name="colorLightGray">#F2F2F2</color>
     <color name="colorStatusFree">#106CF8</color>
     <color name="colorStatusMy">#4A9D62</color>
-    <color name="colorStatusOnTheWay">#C13EF8</color>
+    <color name="colorViolet">#C13EF8</color>
 </resources>

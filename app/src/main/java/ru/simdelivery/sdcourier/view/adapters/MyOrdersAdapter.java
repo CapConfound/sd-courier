@@ -1,6 +1,7 @@
 package ru.simdelivery.sdcourier.view.adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,7 +26,6 @@ import ru.simdelivery.sdcourier.model.Address;
 import ru.simdelivery.sdcourier.model.Order;
 import ru.simdelivery.sdcourier.model.Point;
 import ru.simdelivery.sdcourier.view.fragments.details.MyOrderDetailsFragment;
-import ru.simdelivery.sdcourier.view.fragments.details.OrderDetailsFragment;
 
 public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.MyViewHolder> {
 
@@ -176,7 +176,34 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.MyView
 
         String sss = String.valueOf(hour1)+":"+String.valueOf(minutes1);
 
+        Drawable background = context.getResources().getDrawable(R.drawable.tag_gray);
+        Order order = items;
+        String status = order.getStatus();
+        switch (status) {
+            case "STATUS_PROCESSED":
+                background = context.getResources().getDrawable(R.drawable.tag_gray);
+                break;
+
+            case "STATUS_COURIER_ASSIGNED":
+                background = context.getResources().getDrawable(R.drawable.tag_blue);
+                break;
+            case "STATUS_COURIER_ON_THE_WAY":
+                background = context.getResources().getDrawable(R.drawable.tag_violet);
+                break;
+            case "STATUS_COURIER_IS_WAITING":
+                background = context.getResources().getDrawable(R.drawable.tag_orange);
+                break;
+            case "STATUS_COMPLETED":
+                background = context.getResources().getDrawable(R.drawable.tag_green);
+                break;
+            case "STATUS_CANCELED":
+                background = context.getResources().getDrawable(R.drawable.tag_red);
+                break;
+        }
+
+
         v.orderID.setText(orderId);
+        v.orderID.setBackground(background);
 //        v.time.setText(getTimeText(arrivalAtFrom, arrivalAtTo));
         v.time.setText(time);
         v.p1City.setText(city1);
