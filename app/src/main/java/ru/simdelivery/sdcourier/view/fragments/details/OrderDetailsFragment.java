@@ -21,12 +21,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -36,11 +38,14 @@ import ru.simdelivery.sdcourier.model.Item;
 import ru.simdelivery.sdcourier.model.Order;
 import ru.simdelivery.sdcourier.model.Point;
 import ru.simdelivery.sdcourier.model.savedData.SavedOrders;
+import ru.simdelivery.sdcourier.network.AcceptOrders;
 import ru.simdelivery.sdcourier.network.ApiClient;
 import ru.simdelivery.sdcourier.network.GetOrders;
 import ru.simdelivery.sdcourier.view.adapters.DialogRecyclerAdapter;
 import ru.simdelivery.sdcourier.view.adapters.OrdersPageAdapter;
 import ru.simdelivery.sdcourier.view.fragments.LoginFragment;
+import ru.simdelivery.sdcourier.view.fragments.MyOrdersFragment;
+import ru.simdelivery.sdcourier.view.fragments.OrdersHistoryFragment;
 
 public class OrderDetailsFragment extends Fragment {
 
@@ -92,6 +97,8 @@ public class OrderDetailsFragment extends Fragment {
                     viewPager2.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
                     viewPager2.setAdapter(adapter);
                     dialog = new Dialog(getContext(), R.style.AppTheme);
+                    Integer id = currentOrder.getId();
+                    acceptOrderBtn.setOnClickListener(v -> acceptOrder(id, token));
                     showItemsBtn.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -111,10 +118,11 @@ public class OrderDetailsFragment extends Fragment {
                                 }
                             });
                             dialog.show();
-                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.argb(162, 5, 5, 5)));
                             Log.d("dialog button", "done");
                         }
                     });
+
                 }
             }
             @Override
@@ -128,12 +136,34 @@ public class OrderDetailsFragment extends Fragment {
 
     }
 
-    private void acceptOrder (Integer position) {
+    private void acceptOrder (Integer id, String token) {
 
+        Log.d("Accept button","pressed");
+
+        AcceptOrders service1 = ApiClient.getRetrofitInstance(token).create(AcceptOrders.class);
+        Call<ResponseBody> call1 = service1.acceptOrder(id);
+        call1.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.code() == 200) {
+                    Log.d("Accept button","done enqueue");
+
+                    FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.replace(R.id.fragment_container, new MyOrdersFragment()).addToBackStack(null).commit();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d("Accept button","failure");
+            }
+        });
     }
-
-
-
-
-
 }
+
+
+
+
+
+

@@ -59,8 +59,8 @@ public class LoginFragment extends Fragment {
         sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         String gcmToken = sharedPref.getString(getString(R.string.gcm_token), "");
 
-
         Auth data = new Auth(login_string, password_string, gcmToken);
+
         GetUserToken service = ApiClient.getAuthData().create(GetUserToken.class);
 
         Call<AuthResponse> call = service.getAuthResponse(data);
@@ -74,7 +74,7 @@ public class LoginFragment extends Fragment {
                     Toast.makeText(getContext(), "Введённые данные неверны", Toast.LENGTH_SHORT).show();
                     la.showIncorrectLogin();
                 }
-                else {
+                else if (response.code() == 200) {
                     la.hideProgressBar();
                     Log.d("код не 401", "точно");
                     AuthResponse userData = response.body();
@@ -89,10 +89,15 @@ public class LoginFragment extends Fragment {
                     editor.commit();
                     openApp();
 //                Log.d("token", String.valueOf(response.body().getToken()));
+                } else {
+                    la.hideProgressBar();
+                    Toast.makeText(getContext(), "При загрузке данных произошла ошибка", Toast.LENGTH_SHORT).show();
+                    la.showIncorrectLogin();
                 }
 
                 editor = sharedPref.edit();
-                editor.putString(getString(R.string.user_email), response.body().getUsername());
+                editor.putString(getString(R.string.user_email), response.body().getEmail());
+                editor.putString(getString(R.string.user_name), response.body().getUsername());
                 editor.commit();
             }
 

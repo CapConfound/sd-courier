@@ -2,19 +2,17 @@ package ru.simdelivery.sdcourier.view.fragments.details;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +25,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -37,6 +36,7 @@ import ru.simdelivery.sdcourier.model.Order;
 import ru.simdelivery.sdcourier.model.Point;
 import ru.simdelivery.sdcourier.network.ApiClient;
 import ru.simdelivery.sdcourier.network.GetMyOrders;
+import ru.simdelivery.sdcourier.network.UpdateStatus;
 import ru.simdelivery.sdcourier.view.adapters.DialogRecyclerAdapter;
 import ru.simdelivery.sdcourier.view.adapters.MyOrdersPageAdapter;
 
@@ -44,10 +44,12 @@ public class MyOrderDetailsFragment extends Fragment {
 
 
     private SharedPreferences sharedPref;
+    private RelativeLayout tag;
     private TextView idView;
+    private TextView statuz;
     private Button acceptPaymentBtn;
     private Button showItemsBtn;
-    private Button endOrder;
+    private Button changeStatus;
     private ViewPager2 viewPager2;
     private Dialog dialog;
 
@@ -57,9 +59,11 @@ public class MyOrderDetailsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment_my_order_details, container, false);
+        tag = v.findViewById(R.id.my_order_tag_area);
+        statuz = v.findViewById(R.id.my_order_details_status_text);
         acceptPaymentBtn = v.findViewById(R.id.my_order_details_accept_payment_button);
         showItemsBtn = v.findViewById(R.id.my_order_details_items_button);
-        endOrder = v.findViewById(R.id.my_order_details_end_order_button);
+        changeStatus = v.findViewById(R.id.my_order_details_status_button);
         idView = v.findViewById(R.id.my_order_details_id);
         viewPager2 = v.findViewById(R.id.my_order_details_viewpager2);
         sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
@@ -81,9 +85,52 @@ public class MyOrderDetailsFragment extends Fragment {
                         position = bundle.getInt("position", 0);
                     }
                     Order currentOrder = ordersList.get(position);
-                    String idText = "Заказ № " + currentOrder.getId();
+                    String idText = "Мой заказ № " + currentOrder.getId();//+ ". ";
+                    String statusText = "";
+
+                    Drawable background = getContext().getResources().getDrawable(R.drawable.htag_gray);
+                    Drawable btnBackground = getContext().getResources().getDrawable(R.drawable.background_button_blue);
+
+                    String status = currentOrder.getStatus();
+                    switch (status) {
+                        case "STATUS_PROCESSED":
+                            background = getContext().getResources().getDrawable(R.drawable.htag_gray);
+                            btnBackground = getContext().getResources().getDrawable(R.drawable.background_button_gray);
+                            statusText += "В обработке";
+                            break;
+
+                        case "STATUS_COURIER_ASSIGNED":
+                            background = getContext().getResources().getDrawable(R.drawable.htag_blue);
+                            btnBackground = getContext().getResources().getDrawable(R.drawable.background_button_blue);
+                            statusText += "Курьер назначен";
+                            break;
+                        case "STATUS_COURIER_ON_THE_WAY":
+                            background = getContext().getResources().getDrawable(R.drawable.htag_violet);
+                            btnBackground = getContext().getResources().getDrawable(R.drawable.background_button_violet);
+                            statusText += "Курьер в пути";
+                            break;
+                        case "STATUS_COURIER_IS_WAITING":
+                            background = getContext().getResources().getDrawable(R.drawable.htag_orange);
+                            btnBackground = getContext().getResources().getDrawable(R.drawable.background_button_orange);
+                            statusText += "Курьер ждёт";
+                            break;
+                        case "STATUS_COMPLETED":
+                            background = getContext().getResources().getDrawable(R.drawable.htag_green);
+                            btnBackground = getContext().getResources().getDrawable(R.drawable.background_button_green);
+                            statusText += "Завершен";
+                            break;
+                        case "STATUS_CANCELED":
+                            background = getContext().getResources().getDrawable(R.drawable.htag_red);
+                            btnBackground = getContext().getResources().getDrawable(R.drawable.background_button_red);
+                            statusText += "Отменён";
+                            break;
+                    }
+                    changeStatus.setBackground(btnBackground);
+
+                    statuz.setText(statusText);
+
+                    tag.setBackground(background);
                     idView.setText(idText);
-                    List<Point> pointsList = currentOrder.getPoints();
                     List<Item> itemsList = currentOrder.getItems();
                     MyOrdersPageAdapter adapter = new MyOrdersPageAdapter(currentOrder, getContext());
                     viewPager2.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
@@ -101,11 +148,105 @@ public class MyOrderDetailsFragment extends Fragment {
                         rv.setLayoutManager(new LinearLayoutManager(getContext()));
                         closeBtn.setOnClickListener(v11 -> dialog.dismiss());
                         dialog.show();
-                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.argb(162, 5, 5, 5)));
                         Log.d("dialog button", "done");
                     });
-                    endOrder.setOnClickListener(v2 -> {
-                        //todo запрос на изменение статуса
+                    changeStatus.setOnClickListener(v2 -> {
+                        //todo запрос на изменение статуса + detach & attach fragment
+                        Integer currentPointId = currentOrder.getCurrentPointId();
+                        Integer currentPointNum = getPointNum(currentOrder, currentPointId);
+
+                        // у меня есть заказ и id текущей точки.   id точки используется для запроса об изменении
+                        // надо определить номер текущей точки для определения позиции кнопки.
+
+                        String curStatus = currentOrder.getStatus();
+                        int action = 0;
+                        switch (curStatus) {
+
+                            case "STATUS_COURIER_ASSIGNED":
+                                changeStatus.setText("Отправиться на 1 точку");
+                                action = 1;
+                                break;
+                            case "STATUS_COURIER_ON_THE_WAY":
+                                if (currentPointNum.equals(1)) {
+                                    changeStatus.setText("Прибыл на 1 точку");
+                                    action = 2;
+                                } else {
+                                    changeStatus.setText("Прибыл на 2 точку");
+                                    action = 3;
+                                }
+                                break;
+                            case "STATUS_COURIER_IS_WAITING":
+                                if (currentPointNum.equals(1)) {
+                                    changeStatus.setText("На 2 точку");
+                                    action = 4;
+                                } else {
+                                    changeStatus.setText("Закончить заказ");
+                                    action = 5;
+                                }
+                                break;
+                            case "STATUS_CANCELED":
+                                changeStatus.setText("Заказ отменён");
+                                changeStatus.setEnabled(false);
+                                break;
+                        }
+                        Integer orderId = currentOrder.getId();
+                        Integer point = 0;
+                        String event;
+                        switch (action) {
+                            case 1:
+                                event = "startToPoint";
+                                point = getPointIdByNum(currentOrder, 1);
+                                break;
+                            case 2:
+                                event = "arrivedAtPoint";
+                                point = getPointIdByNum(currentOrder, 1);
+                                break;
+                            case 3:
+                                event = "arrivedAtPoint";
+                                point = getPointIdByNum(currentOrder, 2);
+                                break;
+                            case 4:
+                                event = "startToPoint";
+                                point = getPointIdByNum(currentOrder, 2);
+                                break;
+                            //case 5:
+
+
+                            default:
+                                event = "error";
+                                break;
+                        }
+                        if (!event.equals("error")){
+                            UpdateStatus service1 = ApiClient.getRetrofitInstance(token).create(UpdateStatus.class);
+                            Call<ResponseBody> call1 = service1.updStatus(orderId, event, point);
+                            call1.enqueue(new Callback<ResponseBody>() {
+                                @Override
+                                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                    if (response.code() == 200) {
+                                        Toast.makeText(getContext(), "Обновление статуса успешно", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(getContext(), "При обновлении статуса произошла ошибка", Toast.LENGTH_SHORT).show();
+                                    }
+                                    MyOrderDetailsFragment fragment = new MyOrderDetailsFragment();
+                                    getActivity().getSupportFragmentManager()
+                                            .beginTransaction()
+                                            .remove(fragment)
+                                            .commit();
+
+
+                                }
+
+                                @Override
+                                public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                                }
+                            });
+
+                        }
+
+
+
                     });
 
                 }
@@ -123,24 +264,23 @@ public class MyOrderDetailsFragment extends Fragment {
         return v;
     }
 
-
-    public void openMap() {
-        Uri uri = Uri.parse("yandexmaps://?whatshere[point]=30.331346,59.925857999999998&whatshere[zoom]=17");
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        // Проверяем, установлено ли хотя бы одно приложение, способное выполнить это действие.
-
-        PackageManager packageManager = getActivity().getPackageManager();
-        List<ResolveInfo> activities = packageManager.queryIntentActivities(intent, 0);
-        boolean isIntentSafe = activities.size() > 0;
-        if (isIntentSafe) {
-            startActivity(intent);
-        } else {
-            // Открываем страницу приложения Яндекс.Карты в Google Play.
-            intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse("market://details?id=ru.yandex.yandexmaps"));
-            startActivity(intent);
+    private Integer getPointNum (Order order, int pointId) {
+        Integer pNumber = 0;
+        for (Point p: order.getPoints()) {
+            if(p.getId().equals(pointId)) {
+                pNumber = p.getNumber();
+                return pNumber;
+            }
         }
+        return pNumber;
     }
 
+    private Integer getPointIdByNum (Order order, int num) {
+        Integer id = 0;
+        for (Point p: order.getPoints()) {
+            if (p.getNumber().equals(num)) id = p.getId();
+        }
+        return id;
+    }
 
 }

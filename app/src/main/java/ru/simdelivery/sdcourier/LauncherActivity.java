@@ -85,6 +85,10 @@ public class LauncherActivity extends AppCompatActivity {
                     .commit();
         }
         else {
+
+
+
+
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.fragment_container, new LoginFragment())

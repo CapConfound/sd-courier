@@ -63,11 +63,11 @@ public class DialogRecyclerAdapter extends RecyclerView.Adapter<DialogRecyclerAd
     public void onBindViewHolder(@NonNull ViewHolder v, int position) {
         Item item = itemList.get(position);
 
-        Integer cost = null; // Общая стоимость предметов заказа
+        Double cost = 0.0; // Общая стоимость предметов заказа
         if (item != null) {
             Integer price = item.getProduct().getPrice();
             Integer count = item.getCount();
-            Integer mult = price * count;
+            Double mult = (double) (price * count);
             Integer discount = item.getDiscount();
             if (discount != 0){
                 cost += mult - (mult / 100 * discount);

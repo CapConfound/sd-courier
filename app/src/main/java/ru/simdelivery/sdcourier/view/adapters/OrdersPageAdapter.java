@@ -155,14 +155,9 @@ public class OrdersPageAdapter extends RecyclerView.Adapter<OrdersPageAdapter.Vi
         Integer entrance = currentPoint.getAddress().getEntrance();
         Integer floor = currentPoint.getAddress().getFloor();
 
-        String commentText = "";
 
-        if (entrance != null) {
-            commentText += "Подъезд: " + entrance + "\n";
-        }
-        if (floor != null) {
-            commentText += "Этаж: " + floor + "\n";
-        }
+
+
 
         status.setText(statusText);
         time.setText(timeText);
@@ -187,15 +182,21 @@ public class OrdersPageAdapter extends RecyclerView.Adapter<OrdersPageAdapter.Vi
                 dialog.setContentView(R.layout.dialog_comments);
                 Button closeBtn = dialog.findViewById(R.id.dialog_close_btn);
                 TextView content = dialog.findViewById(R.id.comment_view);
-                if (commentText.equals("")){
-                    commentText = "Тут ничего нет";
+                String responseCom = currentPoint.getCommentary();
+
+                if (responseCom == null) {
+                    if (commentText.equals("")) {
+                        commentText = "Здесь ничего нет";
+                    }
+                } else {
+                    commentText += responseCom;
                 }
                 content.setText(commentText);
                 closeBtn.setOnClickListener(v1 -> {
                     dialog.dismiss();
                 });
                 dialog.show();
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.argb(162, 5, 5, 5)));
 
 
 

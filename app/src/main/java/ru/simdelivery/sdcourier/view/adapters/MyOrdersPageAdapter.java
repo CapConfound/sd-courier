@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -32,6 +35,7 @@ import ru.simdelivery.sdcourier.model.Point;
 
 public class MyOrdersPageAdapter extends RecyclerView.Adapter<MyOrdersPageAdapter.ViewHolder> {
 
+    RelativeLayout tag;
     private Order order;
     Context context;
     SharedPreferences sharedPref;
@@ -54,6 +58,7 @@ public class MyOrdersPageAdapter extends RecyclerView.Adapter<MyOrdersPageAdapte
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            tag = itemView.findViewById(R.id.my_order_tag_area);
             status = itemView.findViewById(R.id.my_orders_page_status_view);
             name = itemView.findViewById(R.id.my_orders_page_name_view);
             city = itemView.findViewById(R.id.my_orders_page_city_view);
@@ -164,7 +169,7 @@ public class MyOrdersPageAdapter extends RecyclerView.Adapter<MyOrdersPageAdapte
         String paymentCountText = "";
 
         String costText = "";
-        int deliveryAndCost = getItemCost(order) + order.getCost();
+        double deliveryAndCost = getItemCost(order) + order.getCost();
 
         switch (currentPoint.getPaymentObject()) {
             case "PAYMENT_OBJECT_NOTHING":
@@ -183,7 +188,26 @@ public class MyOrdersPageAdapter extends RecyclerView.Adapter<MyOrdersPageAdapte
                 costText = deliveryAndCost + "р.";
                 break;
         }
+        Integer entrance = currentPoint.getAddress().getEntrance();
+        Integer floor = currentPoint.getAddress().getFloor();
 
+        String commentText = "";
+
+        if (entrance != null) {
+            commentText += "Подъезд: " + entrance + "\n";
+        }
+        if (floor != null) {
+            commentText += "Этаж: " + floor + "\n";
+        }
+        String responseCom = currentPoint.getCommentary();
+
+        if (responseCom == null) {
+            if (commentText.equals("")) {
+                commentBtn.setEnabled(false);
+            }
+        } else {
+            commentText += responseCom;
+        }
 
         status.setText(statusText);
         name.setText(pName);
@@ -200,8 +224,24 @@ public class MyOrdersPageAdapter extends RecyclerView.Adapter<MyOrdersPageAdapte
         building.setText(buildingText);
         apartmentNum.setText(apartmentText);
         callBtn.setOnClickListener(v -> openDialer(tel));
+        String finalCommentText = commentText;
         commentBtn.setOnClickListener(v -> {
             // todo open custom dialog here
+            dialog = new Dialog(context, R.style.AppTheme);
+            dialog.setContentView(R.layout.dialog_comments);
+            Button closeBtn = dialog.findViewById(R.id.dialog_close_btn);
+            TextView content = dialog.findViewById(R.id.comment_view);
+
+
+
+            content.setText(finalCommentText);
+            closeBtn.setOnClickListener(v1 -> {
+                dialog.dismiss();
+            });
+            dialog.show();
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.argb(162, 5, 5, 5)));
+
+
         });
 
     }
@@ -256,11 +296,11 @@ public class MyOrdersPageAdapter extends RecyclerView.Adapter<MyOrdersPageAdapte
         return dayMonthFormat.format(date);
     }
 
-    private Integer getItemCost (Order order) {
+    private Double getItemCost (Order order) {
         List<Item> itemList = order.getItems();
 
 
-        Integer cost = null; // Общая стоимость предметов заказа
+        Double cost = 0.0; // Общая стоимость предметов заказа
         for (Item item : itemList) {
             if (item != null) {
                 Integer price = item.getProduct().getPrice();
@@ -270,7 +310,7 @@ public class MyOrdersPageAdapter extends RecyclerView.Adapter<MyOrdersPageAdapte
                 if (discount != 0){
                     cost += mult - (mult / 100 * discount);
                 } else {
-                    cost = mult;
+                    cost = Double.valueOf(mult);
                 }
             }
         }

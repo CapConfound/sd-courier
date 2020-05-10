@@ -1,7 +1,10 @@
 package ru.simdelivery.sdcourier.view.fragments;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -46,19 +49,21 @@ public class MyOrdersFragment extends Fragment {
         assert la != null;
         sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         String token = sharedPref.getString(getString(R.string.auth_token), "");
-
+        Dialog dialog = createDialog();
+        dialog.show();
         GetMyOrders service = ApiClient.getRetrofitInstance(token).create(GetMyOrders.class);
         Call<List<Order>> call = service.getMyOrders();
-        la.showProgressBar();
+
         call.enqueue(new Callback<List<Order>>() {
             @Override
             public void onResponse(Call<List<Order>> call, Response<List<Order>> response) {
-                la.hideProgressBar();
+
                 List<Order> ordersList = response.body();
                 rv = v.findViewById(R.id.my_orders_recycler);
                 adapter = new MyOrdersAdapter(ordersList, getActivity());
                 rv.setAdapter(adapter);
                 rv.setLayoutManager(new LinearLayoutManager(getContext()));
+                dialog.dismiss();
             }
 
             @Override
@@ -70,5 +75,11 @@ public class MyOrdersFragment extends Fragment {
 
 
         return v;
+    }
+    private Dialog createDialog () {
+        Dialog dialog = new Dialog(getContext(), R.style.AppTheme);
+        dialog.setContentView(R.layout.dialog_loading);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.argb(162, 5, 5, 5)));
+        return dialog;
     }
 }
