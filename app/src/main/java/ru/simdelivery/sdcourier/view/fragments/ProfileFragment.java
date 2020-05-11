@@ -58,7 +58,7 @@ public class ProfileFragment extends Fragment {
         emailText = v.findViewById(R.id.user_email_view);
         settingsBtn = v.findViewById(R.id.user_settings_button);
         logoutBtn = v.findViewById(R.id.user_logout_button);
-        ordersHistory = v.findViewById(R.id.user_order_history_button);
+//        ordersHistory = v.findViewById(R.id.user_order_history_button);
 
         sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         String token = sharedPref.getString(getString(R.string.auth_token), "");
@@ -69,7 +69,7 @@ public class ProfileFragment extends Fragment {
 
         settingsBtn.setOnClickListener(v1 -> openSettingsFragment());
 
-        ordersHistory.setOnClickListener(v12 -> openHistoryFragment());
+//        ordersHistory.setOnClickListener(v12 -> openHistoryFragment());
 
         logoutBtn.setOnClickListener(v13 -> logout(token));
 
@@ -81,10 +81,10 @@ public class ProfileFragment extends Fragment {
         fragmentTransaction.replace(R.id.fragment_container, new SettingsFragment()).addToBackStack(null).commit();
     }
 
-    private void openHistoryFragment() {
-        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, new OrdersHistoryFragment()).addToBackStack(null).commit();
-    }
+//    private void openHistoryFragment() {
+//        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+//        fragmentTransaction.replace(R.id.fragment_container, new OrdersHistoryFragment()).addToBackStack(null).commit();
+//    }
 
     public void logout(String token) {
 

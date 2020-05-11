@@ -85,6 +85,7 @@
                 android:fontFamily="@font/manrope_regular"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
+                android:visibility="gone"
                 android:text="История заказов"/>
             <Button
                 android:layout_width="wrap_content"
@@ -93,6 +94,7 @@
                 android:id="@+id/user_order_history_button"
 
                 android:paddingHorizontal="25dp"
+                android:visibility="gone"
                 android:textSize="16sp"
                 android:textColor="@color/colorPrimary"
                 android:fontFamily="@font/manrope_bold"
