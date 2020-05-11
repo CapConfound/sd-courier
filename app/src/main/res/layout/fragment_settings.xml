@@ -34,6 +34,7 @@
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
+                android:id="@+id/settings_notifications_button"
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:textColor="@color/colorDarkGray"
                 android:textSize="25sp"
@@ -44,14 +45,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:background="@color/colorLightGray" />
-
-            <Switch
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:id="@+id/settings_notifications_switch"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                android:paddingRight="20dp"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

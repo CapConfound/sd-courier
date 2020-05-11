@@ -226,7 +226,7 @@ public class MyOrdersPageAdapter extends RecyclerView.Adapter<MyOrdersPageAdapte
         callBtn.setOnClickListener(v -> openDialer(tel));
         String finalCommentText = commentText;
         commentBtn.setOnClickListener(v -> {
-            // todo open custom dialog here
+
             dialog = new Dialog(context, R.style.AppTheme);
             dialog.setContentView(R.layout.dialog_comments);
             Button closeBtn = dialog.findViewById(R.id.dialog_close_btn);

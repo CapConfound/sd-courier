@@ -169,7 +169,6 @@ public class OrdersPageAdapter extends RecyclerView.Adapter<OrdersPageAdapter.Vi
         commentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // todo open custom dialog here
                 String commentText = "";
 
                 if (entrance != null) {
