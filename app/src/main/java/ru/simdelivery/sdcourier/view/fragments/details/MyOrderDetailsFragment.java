@@ -160,6 +160,17 @@ public class MyOrderDetailsFragment extends Fragment {
                         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.argb(162, 5, 5, 5)));
                         Log.d("dialog button", "done");
                     });
+                    acceptPaymentBtn.setOnClickListener(v2 -> {
+                        if (status.equals("STATUS_COURIER_IS_WAITING") && currentPointNum == 2) {
+                            Button closeBtn;
+                            dialog.setContentView(R.layout.dialog_payment);
+                            closeBtn = dialog.findViewById(R.id.dialog_close_btn);
+                            closeBtn.setOnClickListener(v11 -> dialog.dismiss());
+                            dialog.show();
+                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.argb(162, 5, 5, 5)));
+
+                        }
+                    });
 
 
 
@@ -246,8 +257,6 @@ public class MyOrderDetailsFragment extends Fragment {
         }
         return id;
     }
-
-
 
     private void onChangeStatus(Order currentOrder, Integer action, String token) {
         Integer orderId = currentOrder.getId();
