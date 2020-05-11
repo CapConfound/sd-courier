@@ -207,8 +207,6 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
             public void onClick(View v) {
 
 
-                Toast.makeText(context, "test click" + orderListResult.get(position).getId(), Toast.LENGTH_SHORT).show();
-
                 Integer id = orderListResult.get(position).getId();
                 Log.d("id", String.valueOf(id));
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();

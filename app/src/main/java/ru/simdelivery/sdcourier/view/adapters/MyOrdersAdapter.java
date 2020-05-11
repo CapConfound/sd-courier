@@ -213,7 +213,6 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.MyView
         v.item_order.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "test click" + orderListResult.get(position).getId(), Toast.LENGTH_SHORT).show();
 
                 Integer id = orderListResult.get(position).getId();
                 Log.d("id", String.valueOf(id));

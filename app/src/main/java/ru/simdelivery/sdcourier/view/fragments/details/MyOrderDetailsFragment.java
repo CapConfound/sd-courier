@@ -68,18 +68,19 @@ public class MyOrderDetailsFragment extends Fragment {
         viewPager2 = v.findViewById(R.id.my_order_details_viewpager2);
         sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         String token = sharedPref.getString(getString(R.string.auth_token), "");
-        LauncherActivity la = (LauncherActivity) getActivity();
-        assert la != null;
+
         GetMyOrders service = ApiClient.getRetrofitInstance(token).create(GetMyOrders.class);
         Call<List<Order>> call = service.getMyOrders();
-        la.showProgressBar();
+
         call.enqueue(new Callback<List<Order>>() {
             @Override
             public void onResponse(Call<List<Order>> call, Response<List<Order>> response) {
                 if(response.code() == 200) {
-                    la.hideProgressBar();
+
                     List<Order> ordersList = response.body();
                     Integer position = 0;
+                    Drawable background = getContext().getResources().getDrawable(R.drawable.htag_gray);
+                    Drawable btnBackground = getContext().getResources().getDrawable(R.drawable.background_button_blue);
                     Bundle bundle = getArguments();
                     if (bundle != null) {
                         position = bundle.getInt("position", 0);
@@ -87,47 +88,55 @@ public class MyOrderDetailsFragment extends Fragment {
                     Order currentOrder = ordersList.get(position);
                     String idText = "Мой заказ № " + currentOrder.getId();//+ ". ";
                     String statusText = "";
+                    String statusBtnText = "";
 
-                    Drawable background = getContext().getResources().getDrawable(R.drawable.htag_gray);
-                    Drawable btnBackground = getContext().getResources().getDrawable(R.drawable.background_button_blue);
 
+                    Integer currentPointID = currentOrder.getCurrentPointId();
+                    if (currentPointID == null){
+                        currentPointID = 1;
+                    }
+                    Integer currentPointNum = getPointNum(currentOrder, currentPointID);
                     String status = currentOrder.getStatus();
                     switch (status) {
-                        case "STATUS_PROCESSED":
-                            background = getContext().getResources().getDrawable(R.drawable.htag_gray);
-                            btnBackground = getContext().getResources().getDrawable(R.drawable.background_button_gray);
-                            statusText += "В обработке";
-                            break;
-
                         case "STATUS_COURIER_ASSIGNED":
                             background = getContext().getResources().getDrawable(R.drawable.htag_blue);
                             btnBackground = getContext().getResources().getDrawable(R.drawable.background_button_blue);
-                            statusText += "Курьер назначен";
+                            statusText = "Курьер назначен";
+                            statusBtnText = "На первую точку";
                             break;
                         case "STATUS_COURIER_ON_THE_WAY":
                             background = getContext().getResources().getDrawable(R.drawable.htag_violet);
                             btnBackground = getContext().getResources().getDrawable(R.drawable.background_button_violet);
-                            statusText += "Курьер в пути";
+                            if (currentPointNum.equals(1)) {
+                                statusText = "В пути к точке 1";
+                                statusBtnText = "Прибыл на 1 точку";
+                            } else {
+                                statusText = "В пути к точке 2";
+                                statusBtnText = "Прибыл на 2 точку";
+                            }
                             break;
                         case "STATUS_COURIER_IS_WAITING":
                             background = getContext().getResources().getDrawable(R.drawable.htag_orange);
                             btnBackground = getContext().getResources().getDrawable(R.drawable.background_button_orange);
-                            statusText += "Курьер ждёт";
-                            break;
-                        case "STATUS_COMPLETED":
-                            background = getContext().getResources().getDrawable(R.drawable.htag_green);
-                            btnBackground = getContext().getResources().getDrawable(R.drawable.background_button_green);
-                            statusText += "Завершен";
+                            if (currentPointNum.equals(1)) {
+                                statusText += "Ожидание на точке 1";
+                                statusBtnText = "На 2 точку";
+                            } else {
+                                statusText += "Ожидание на точке 2";
+                                statusBtnText = "Закончить заказ";
+                            }
                             break;
                         case "STATUS_CANCELED":
                             background = getContext().getResources().getDrawable(R.drawable.htag_red);
                             btnBackground = getContext().getResources().getDrawable(R.drawable.background_button_red);
-                            statusText += "Отменён";
+                            statusText += "Заказ отменён";
+                            statusBtnText = "Заказ отменён";
                             break;
                     }
-                    changeStatus.setBackground(btnBackground);
 
                     statuz.setText(statusText);
+                    changeStatus.setText(statusBtnText);
+                    changeStatus.setBackground(btnBackground);
 
                     tag.setBackground(background);
                     idView.setText(idText);
@@ -151,33 +160,43 @@ public class MyOrderDetailsFragment extends Fragment {
                         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.argb(162, 5, 5, 5)));
                         Log.d("dialog button", "done");
                     });
+
+
+
+                    // у меня есть заказ и id текущей точки.   id точки используется для запроса об изменении
+                    // надо определить номер текущей точки для определения позиции кнопки.
+
+                    statuz.setText(statusText);
+
                     changeStatus.setOnClickListener(v2 -> {
-                        //todo запрос на изменение статуса + detach & attach fragment
+
                         Integer currentPointId = currentOrder.getCurrentPointId();
-                        Integer currentPointNum = getPointNum(currentOrder, currentPointId);
-
-                        // у меня есть заказ и id текущей точки.   id точки используется для запроса об изменении
-                        // надо определить номер текущей точки для определения позиции кнопки.
-
+                        if (currentPointId == null){
+                            currentPointId = 1;
+                        }
+                        Integer currentPointNUM = getPointNum(currentOrder, currentPointId);
                         String curStatus = currentOrder.getStatus();
                         int action = 0;
+
                         switch (curStatus) {
 
                             case "STATUS_COURIER_ASSIGNED":
+
                                 changeStatus.setText("Отправиться на 1 точку");
                                 action = 1;
                                 break;
                             case "STATUS_COURIER_ON_THE_WAY":
-                                if (currentPointNum.equals(1)) {
+                                if (currentPointNUM.equals(1)) {
                                     changeStatus.setText("Прибыл на 1 точку");
                                     action = 2;
                                 } else {
+                                    statuz.setText("В пути на точку 2");
                                     changeStatus.setText("Прибыл на 2 точку");
                                     action = 3;
                                 }
                                 break;
                             case "STATUS_COURIER_IS_WAITING":
-                                if (currentPointNum.equals(1)) {
+                                if (currentPointNUM.equals(1)) {
                                     changeStatus.setText("На 2 точку");
                                     action = 4;
                                 } else {
@@ -190,62 +209,7 @@ public class MyOrderDetailsFragment extends Fragment {
                                 changeStatus.setEnabled(false);
                                 break;
                         }
-                        Integer orderId = currentOrder.getId();
-                        Integer point = 0;
-                        String event;
-                        switch (action) {
-                            case 1:
-                                event = "startToPoint";
-                                point = getPointIdByNum(currentOrder, 1);
-                                break;
-                            case 2:
-                                event = "arrivedAtPoint";
-                                point = getPointIdByNum(currentOrder, 1);
-                                break;
-                            case 3:
-                                event = "arrivedAtPoint";
-                                point = getPointIdByNum(currentOrder, 2);
-                                break;
-                            case 4:
-                                event = "startToPoint";
-                                point = getPointIdByNum(currentOrder, 2);
-                                break;
-                            //case 5:
-
-
-                            default:
-                                event = "error";
-                                break;
-                        }
-                        if (!event.equals("error")){
-                            UpdateStatus service1 = ApiClient.getRetrofitInstance(token).create(UpdateStatus.class);
-                            Call<ResponseBody> call1 = service1.updStatus(orderId, event, point);
-                            call1.enqueue(new Callback<ResponseBody>() {
-                                @Override
-                                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                    if (response.code() == 200) {
-                                        Toast.makeText(getContext(), "Обновление статуса успешно", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Toast.makeText(getContext(), "При обновлении статуса произошла ошибка", Toast.LENGTH_SHORT).show();
-                                    }
-                                    MyOrderDetailsFragment fragment = new MyOrderDetailsFragment();
-                                    getActivity().getSupportFragmentManager()
-                                            .beginTransaction()
-                                            .remove(fragment)
-                                            .commit();
-
-
-                                }
-
-                                @Override
-                                public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-                                }
-                            });
-
-                        }
-
-
+                        onChangeStatus(currentOrder, action, token);
 
                     });
 
@@ -282,5 +246,70 @@ public class MyOrderDetailsFragment extends Fragment {
         }
         return id;
     }
+
+
+
+    private void onChangeStatus(Order currentOrder, Integer action, String token) {
+        Integer orderId = currentOrder.getId();
+        Integer point = 0;
+        String event;
+        switch (action) {
+            case 1:
+                event = "startToPoint";
+                point = getPointIdByNum(currentOrder, 1);
+                break;
+            case 2:
+                event = "arrivedAtPoint";
+                point = getPointIdByNum(currentOrder, 1);
+                break;
+            case 3:
+                event = "arrivedAtPoint";
+                point = getPointIdByNum(currentOrder, 2);
+                break;
+            case 4:
+                event = "startToPoint";
+                point = getPointIdByNum(currentOrder, 2);
+                break;
+            //case 5:
+
+
+            default:
+                event = "error";
+                break;
+        }
+        if (!event.equals("error")){
+            UpdateStatus service1 = ApiClient.getRetrofitInstance(token).create(UpdateStatus.class);
+            Call<ResponseBody> call1 = service1.updStatus(orderId, event, point);
+            call1.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if (response.code() == 200) {
+                        Toast.makeText(getContext(), "Обновление статуса успешно", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "При обновлении статуса произошла ошибка", Toast.LENGTH_SHORT).show();
+                    }
+                    updFragment();
+
+
+
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                }
+            });
+
+        }
+    }
+
+    private void updFragment () {
+        getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .detach(this)
+                .attach(this)
+                .commit();
+    }
+
 
 }
