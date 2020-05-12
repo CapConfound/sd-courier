@@ -67,7 +67,7 @@
                     android:layout_gravity="center_vertical"
                     android:text="Хлебопекарная 65А"
                     android:textSize="20sp"
-                    android:textColor="@color/colorGray"
+                    android:textColor="@color/colorDarkGray"
                     android:fontFamily="@font/manrope_regular"/>
 
             </LinearLayout>
