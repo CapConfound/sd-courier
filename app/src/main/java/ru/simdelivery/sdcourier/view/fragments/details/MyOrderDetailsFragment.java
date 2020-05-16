@@ -19,6 +19,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
@@ -39,6 +40,9 @@ import ru.simdelivery.sdcourier.network.GetMyOrders;
 import ru.simdelivery.sdcourier.network.UpdateStatus;
 import ru.simdelivery.sdcourier.view.adapters.DialogRecyclerAdapter;
 import ru.simdelivery.sdcourier.view.adapters.MyOrdersPageAdapter;
+import ru.simdelivery.sdcourier.view.fragments.MyOrdersFragment;
+import ru.simdelivery.sdcourier.view.fragments.OrdersFragment;
+import ru.simdelivery.sdcourier.view.fragments.SettingsFragment;
 
 public class MyOrderDetailsFragment extends Fragment {
 
@@ -50,6 +54,7 @@ public class MyOrderDetailsFragment extends Fragment {
     private Button acceptPaymentBtn;
     private Button showItemsBtn;
     private Button changeStatus;
+    private Button cancelOrder;
     private ViewPager2 viewPager2;
     private Dialog dialog;
 
@@ -64,6 +69,7 @@ public class MyOrderDetailsFragment extends Fragment {
         acceptPaymentBtn = v.findViewById(R.id.my_order_details_accept_payment_button);
         showItemsBtn = v.findViewById(R.id.my_order_details_items_button);
         changeStatus = v.findViewById(R.id.my_order_details_status_button);
+        cancelOrder = v.findViewById(R.id.my_order_details_cancel_button);
         idView = v.findViewById(R.id.my_order_details_id);
         viewPager2 = v.findViewById(R.id.my_order_details_viewpager2);
         sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
@@ -171,6 +177,7 @@ public class MyOrderDetailsFragment extends Fragment {
 
                         }
                     });
+                    cancelOrder.setOnClickListener( v3 -> cancelOrder(currentOrder, token));
 
 
 
@@ -239,6 +246,33 @@ public class MyOrderDetailsFragment extends Fragment {
         return v;
     }
 
+    private void cancelOrder(Order currentOrder, String token) {
+        Integer orderId = currentOrder.getId();
+        UpdateStatus service1 = ApiClient.getRetrofitInstance(token).create(UpdateStatus.class);
+        Call<ResponseBody> call1 = service1.cancelOrder(orderId);
+        call1.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.code() == 200) {
+                    Toast.makeText(getContext(), "Отмена заказа прошла успешно", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "При обновлении статуса произошла ошибка", Toast.LENGTH_SHORT).show();
+                }
+                returnToOrdersList();
+
+
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+
+
+    }
+
     private Integer getPointNum (Order order, int pointId) {
         Integer pNumber = 0;
         for (Point p: order.getPoints()) {
@@ -279,14 +313,16 @@ public class MyOrderDetailsFragment extends Fragment {
                 event = "startToPoint";
                 point = getPointIdByNum(currentOrder, 2);
                 break;
-            //case 5:
+            case 5:
+                event = "end";
+                break;
 
 
             default:
                 event = "error";
                 break;
         }
-        if (!event.equals("error")){
+        if (!event.equals("error") && !event.equals("end")){
             UpdateStatus service1 = ApiClient.getRetrofitInstance(token).create(UpdateStatus.class);
             Call<ResponseBody> call1 = service1.updStatus(orderId, event, point);
             call1.enqueue(new Callback<ResponseBody>() {
@@ -309,15 +345,42 @@ public class MyOrderDetailsFragment extends Fragment {
                 }
             });
 
+        } else if (event.equals("end")) {
+            UpdateStatus service1 = ApiClient.getRetrofitInstance(token).create(UpdateStatus.class);
+            Call<ResponseBody> call1 = service1.completeOrder(orderId);
+            call1.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if (response.code() == 200) {
+                        Toast.makeText(getContext(), "Обновление статуса успешно", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "При обновлении статуса произошла ошибка", Toast.LENGTH_SHORT).show();
+                    }
+                    returnToOrdersList();
+
+
+
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                }
+            });
         }
     }
 
-    private void updFragment () {
+    private void updFragment() {
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .detach(this)
                 .attach(this)
                 .commit();
+    }
+
+    private void returnToOrdersList() {
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, new MyOrdersFragment()).commit();
     }
 
 

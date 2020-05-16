@@ -10,7 +10,15 @@ public interface UpdateStatus {
 //    order/{id_заказа)/arrivedAtPoint/{id_точки}
     @POST("order/{order_id}/{event}/{point_id}")
     Call<ResponseBody> updStatus(@Path ("order_id") Integer orderId, @Path ("event") String event, @Path ("point_id") Integer point);
+
+    @POST("order/{order_id}/complete")
+    Call<ResponseBody> completeOrder(@Path("order_id") Integer orderId);
+
+    @POST("order/{order_id}/reject")
+    Call<ResponseBody> cancelOrder(@Path("order_id") Integer orderId);
 }
+
+
 
 
 
