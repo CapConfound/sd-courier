@@ -175,6 +175,8 @@ public class MyOrderDetailsFragment extends Fragment {
                             dialog.show();
                             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.argb(162, 5, 5, 5)));
 
+                        } else {
+                            Toast.makeText(getContext(), "Заказ ещё в процессе доставки.\nОплата недоступна.", Toast.LENGTH_SHORT).show();
                         }
                     });
                     cancelOrder.setOnClickListener( v3 -> cancelOrder(currentOrder, token));
