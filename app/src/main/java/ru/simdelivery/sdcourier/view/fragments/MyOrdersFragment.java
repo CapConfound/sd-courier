@@ -26,7 +26,6 @@ import retrofit2.Response;
 import ru.simdelivery.sdcourier.LauncherActivity;
 import ru.simdelivery.sdcourier.R;
 import ru.simdelivery.sdcourier.model.Order;
-import ru.simdelivery.sdcourier.model.savedData.SavedOrders;
 import ru.simdelivery.sdcourier.network.ApiClient;
 import ru.simdelivery.sdcourier.network.GetMyOrders;
 import ru.simdelivery.sdcourier.network.GetOrders;

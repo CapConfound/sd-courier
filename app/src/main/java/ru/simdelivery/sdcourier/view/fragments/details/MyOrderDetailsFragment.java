@@ -181,11 +181,6 @@ public class MyOrderDetailsFragment extends Fragment {
                     });
                     cancelOrder.setOnClickListener( v3 -> cancelOrder(currentOrder, token));
 
-
-
-                    // у меня есть заказ и id текущей точки.   id точки используется для запроса об изменении
-                    // надо определить номер текущей точки для определения позиции кнопки.
-
                     statuz.setText(statusText);
 
                     changeStatus.setOnClickListener(v2 -> {
@@ -261,18 +256,12 @@ public class MyOrderDetailsFragment extends Fragment {
                     Toast.makeText(getContext(), "При обновлении статуса произошла ошибка", Toast.LENGTH_SHORT).show();
                 }
                 returnToOrdersList();
-
-
-
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-
             }
         });
-
-
     }
 
     private Integer getPointNum (Order order, int pointId) {
@@ -318,12 +307,11 @@ public class MyOrderDetailsFragment extends Fragment {
             case 5:
                 event = "end";
                 break;
-
-
             default:
                 event = "error";
                 break;
         }
+
         if (!event.equals("error") && !event.equals("end")){
             UpdateStatus service1 = ApiClient.getRetrofitInstance(token).create(UpdateStatus.class);
             Call<ResponseBody> call1 = service1.updStatus(orderId, event, point);
@@ -336,17 +324,11 @@ public class MyOrderDetailsFragment extends Fragment {
                         Toast.makeText(getContext(), "При обновлении статуса произошла ошибка", Toast.LENGTH_SHORT).show();
                     }
                     updFragment();
-
-
-
                 }
-
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-
                 }
             });
-
         } else if (event.equals("end")) {
             UpdateStatus service1 = ApiClient.getRetrofitInstance(token).create(UpdateStatus.class);
             Call<ResponseBody> call1 = service1.completeOrder(orderId);
@@ -359,14 +341,9 @@ public class MyOrderDetailsFragment extends Fragment {
                         Toast.makeText(getContext(), "При обновлении статуса произошла ошибка", Toast.LENGTH_SHORT).show();
                     }
                     returnToOrdersList();
-
-
-
                 }
-
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-
                 }
             });
         }
@@ -384,6 +361,4 @@ public class MyOrderDetailsFragment extends Fragment {
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, new MyOrdersFragment()).commit();
     }
-
-
 }

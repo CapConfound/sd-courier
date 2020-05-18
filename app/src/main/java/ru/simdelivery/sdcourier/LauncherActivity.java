@@ -86,9 +86,6 @@ public class LauncherActivity extends AppCompatActivity {
         }
         else {
 
-
-
-
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.fragment_container, new LoginFragment())
@@ -99,17 +96,6 @@ public class LauncherActivity extends AppCompatActivity {
     public void showIncorrectLogin(){
         TextView warning = findViewById(R.id.login_incorrect_view);
         warning.setVisibility(View.VISIBLE);
-    }
-
-
-    public void showProgressBar() {
-        RelativeLayout bar = findViewById(R.id.progress_circular);
-        bar.setVisibility(View.VISIBLE);
-    }
-
-    public void hideProgressBar() {
-        RelativeLayout bar = findViewById(R.id.progress_circular);
-        bar.setVisibility(View.GONE);
     }
 
     public void setNavGone() {
@@ -131,21 +117,19 @@ public class LauncherActivity extends AppCompatActivity {
         ProfileFragment profileFragment = new ProfileFragment();
         switch (item.getItemId()){
             case R.id.nav_new_orders:
-//                    selectedFragment = new OrdersFragment();
 
                 fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, ordersFragment);
                 fragmentTransaction.commit();
                 return true;
             case R.id.nav_my_orders:
-//                    selectedFragment = new MyOrdersFragment();
+
 
                 fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, myOrdersFragment);
                 fragmentTransaction.commit();
                 return true;
             case R.id.nav_profile:
-//                    selectedFragment = new ProfileFragment();
 
                 fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, profileFragment);

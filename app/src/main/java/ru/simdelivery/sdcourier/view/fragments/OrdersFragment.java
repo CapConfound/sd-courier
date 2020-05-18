@@ -32,11 +32,8 @@ import ru.simdelivery.sdcourier.view.adapters.OrdersAdapter;
 public class OrdersFragment extends Fragment {
     RecyclerView rv;
     OrdersAdapter adapter;
-    String d = "!!!!!MYDEBUG!!!!!!";
     SharedPreferences sharedPref;
-
     Context context;
-
 
     @Nullable
     @Override
@@ -44,31 +41,22 @@ public class OrdersFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_orders_available_view, container, false);
         LauncherActivity la = (LauncherActivity) getActivity();
         assert la != null;
-        la.showProgressBar();
         context = getActivity();
         rv = v.findViewById(R.id.available_orders_recycler);
-
-
-
         sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         String token = sharedPref.getString(getString(R.string.auth_token), "");
-
         Dialog dialog = createDialog();
         dialog.show();
         GetOrders service = ApiClient.getRetrofitInstance(token).create(GetOrders.class);
         Call<List<Order>> call = service.getFreeOrders();
-
         call.enqueue(new Callback<List<Order>>() {
             @Override
             public void onResponse(Call<List<Order>> call, Response<List<Order>> response) {
                 if (response.code() == 200) {
-
                     Log.d("response code", String.valueOf(response.code()));
                     List<Order> ordersList = response.body();
                     bindAdapter(ordersList);
                     dialog.dismiss();
-                    la.hideProgressBar();
-
                 }
             }
             @Override

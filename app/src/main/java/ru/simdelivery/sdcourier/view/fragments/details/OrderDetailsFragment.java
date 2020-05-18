@@ -37,7 +37,6 @@ import ru.simdelivery.sdcourier.R;
 import ru.simdelivery.sdcourier.model.Item;
 import ru.simdelivery.sdcourier.model.Order;
 import ru.simdelivery.sdcourier.model.Point;
-import ru.simdelivery.sdcourier.model.savedData.SavedOrders;
 import ru.simdelivery.sdcourier.network.AcceptOrders;
 import ru.simdelivery.sdcourier.network.ApiClient;
 import ru.simdelivery.sdcourier.network.GetOrders;
@@ -71,7 +70,7 @@ public class OrderDetailsFragment extends Fragment {
         String token = sharedPref.getString(getString(R.string.auth_token), "");
         LauncherActivity la = (LauncherActivity) getActivity();
         assert la != null;
-        la.showProgressBar();
+        //la.showProgressBar();
         GetOrders service = ApiClient.getRetrofitInstance(token).create(GetOrders.class);
         Call<List<Order>> call = service.getFreeOrders();
 
@@ -81,7 +80,7 @@ public class OrderDetailsFragment extends Fragment {
             public void onResponse(Call<List<Order>> call, Response<List<Order>> response) {
                 Log.d("response code", String.valueOf(response.code()));
                 if(response.code() == 200) {
-                    la.hideProgressBar();
+                    //la.hideProgressBar();
                     List<Order> ordersList = response.body();
                     Integer position = 0;
                     Bundle bundle = getArguments();

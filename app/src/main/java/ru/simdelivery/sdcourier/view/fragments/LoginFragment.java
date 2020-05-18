@@ -38,7 +38,6 @@ public class LoginFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         View v = inflater.inflate(R.layout.fragment_login_view, container, false);
         la = (LauncherActivity) getActivity();
         assert la != null;
@@ -47,9 +46,6 @@ public class LoginFragment extends Fragment {
         passwordEdit = v.findViewById(R.id.login_password_view);
         loginBtn = v.findViewById(R.id.login_button);
         loginBtn.setOnClickListener(v1 -> authentication());
-
-
-
         return v;
     }
 
@@ -58,39 +54,28 @@ public class LoginFragment extends Fragment {
         String password_string = passwordEdit.getText().toString();
         sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         String gcmToken = sharedPref.getString(getString(R.string.gcm_token), "");
-
         Auth data = new Auth(login_string, password_string, gcmToken);
-
         GetUserToken service = ApiClient.getAuthData().create(GetUserToken.class);
-
         Call<AuthResponse> call = service.getAuthResponse(data);
-        la.showProgressBar();
         call.enqueue(new Callback<AuthResponse>() {
             @Override
             public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
 
                 if(response.code() == 401){
-                    la.hideProgressBar();
                     Toast.makeText(getContext(), "Введённые данные неверны", Toast.LENGTH_SHORT).show();
-                    la.showIncorrectLogin();
                 }
-                else if (response.code() == 200) {
-                    la.hideProgressBar();
-                    Log.d("код не 401", "точно");
+                else if (response.code() == 200) {Log.d("код не 401", "точно");
                     AuthResponse userData = response.body();
                     Log.d("response.body()", response.toString());
                     sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-
                     editor = sharedPref.edit();
                     String token = response.body().getToken();
-
                     //insert token into SharedPreferences
                     editor.putString(getString(R.string.auth_token), token);
                     editor.commit();
                     openApp();
-//                Log.d("token", String.valueOf(response.body().getToken()));
+
                 } else {
-                    la.hideProgressBar();
                     Toast.makeText(getContext(), "При загрузке данных произошла ошибка", Toast.LENGTH_SHORT).show();
                     la.showIncorrectLogin();
                 }
@@ -105,11 +90,8 @@ public class LoginFragment extends Fragment {
             public void onFailure(Call<AuthResponse> call, Throwable t) {
                 Log.w("message", t.getMessage());
                 Toast.makeText(getContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
-
-
             }
         });
-
     }
 
     private void openApp() {

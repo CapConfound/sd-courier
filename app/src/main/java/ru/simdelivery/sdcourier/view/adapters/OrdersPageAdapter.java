@@ -93,49 +93,42 @@ public class OrdersPageAdapter extends RecyclerView.Adapter<OrdersPageAdapter.Vi
         int minutes1 = 0;
         int hour2 = 0;
         int minutes2 = 0;
-
-        try {
-            arrivalAtFrom = sdf.parse(currentPoint.getArrivalAtFrom());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        if(String.valueOf(currentPoint.getArrivalAtTo()).equals("null")) {
-            timeText = getDayMonthString(arrivalAtFrom) + " как можно скорее";
-
-
-        } else {
+        if (currentPoint.getArrivalAtFrom() != null){
             try {
-                arrivalAtTo = sdf.parse(currentPoint.getArrivalAtTo());
+                arrivalAtFrom = sdf.parse(currentPoint.getArrivalAtFrom());
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            hour1 = getHours(arrivalAtFrom);
 
-            hour2 = getHours(arrivalAtTo);
+            if(String.valueOf(currentPoint.getArrivalAtTo()).equals("null")) {
+                timeText = getDayMonthString(arrivalAtFrom) + " как можно скорее";
 
-            minutes1 = getMinutes(arrivalAtFrom);
-            minutes2 = getMinutes(arrivalAtTo);
+            } else {
+                try {
+                    arrivalAtTo = sdf.parse(currentPoint.getArrivalAtTo());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                hour1 = getHours(arrivalAtFrom);
 
-            if(hour1 == hour2) {
-                if(minutes1 == minutes2) {
-                    timeText = getDayMonthString(arrivalAtFrom) + " ровно в " + getTimeString(arrivalAtFrom);
+                hour2 = getHours(arrivalAtTo);
+
+                minutes1 = getMinutes(arrivalAtFrom);
+                minutes2 = getMinutes(arrivalAtTo);
+
+                if(hour1 == hour2) {
+                    if(minutes1 == minutes2) {
+                        timeText = getDayMonthString(arrivalAtFrom) + " ровно в " + getTimeString(arrivalAtFrom);
+                    } else {
+                        timeText = getDayMonthString(arrivalAtFrom) + " c " + getTimeString(arrivalAtFrom) + " до " + getTimeString(arrivalAtTo);
+                    }
                 } else {
                     timeText = getDayMonthString(arrivalAtFrom) + " c " + getTimeString(arrivalAtFrom) + " до " + getTimeString(arrivalAtTo);
                 }
-            } else {
-                timeText = getDayMonthString(arrivalAtFrom) + " c " + getTimeString(arrivalAtFrom) + " до " + getTimeString(arrivalAtTo);
             }
+        } else {
+            timeText = "Время задано неверно";
         }
-
-        Log.d("OrdersPageAdapter", "mess starts mow");
-        Log.d("milliseconds total", String.valueOf(arrivalAtFrom.getTime()));
-        Log.d("Time should be ", "10:00");
-        Log.d("Time", getTimeString(arrivalAtFrom));
-        Log.d("date is" , String.valueOf(arrivalAtFrom.getDate())+"."+String.valueOf(arrivalAtFrom.getMonth()));
-        Log.d("formattedDate", getDayMonthString(arrivalAtFrom));
-
-
 
         switch (currentPoint.getNumber()) {
             case 1:
@@ -148,16 +141,10 @@ public class OrdersPageAdapter extends RecyclerView.Adapter<OrdersPageAdapter.Vi
         Double lat = currentPoint.getAddress().getLatitude();
         Double lon = currentPoint.getAddress().getLongitude();
         String coordinates = lon+","+lat;
-//        Uri uri = Uri.parse("yandexmaps://?whatshere[point]=30.331346,59.925857999999998&whatshere[zoom]=17");
         Uri uri = Uri.parse("yandexmaps://?whatshere[point]="+ coordinates +"&whatshere[zoom]=17");
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-
         Integer entrance = currentPoint.getAddress().getEntrance();
         Integer floor = currentPoint.getAddress().getFloor();
-
-
-
-
 
         status.setText(statusText);
         time.setText(timeText);
@@ -165,53 +152,37 @@ public class OrdersPageAdapter extends RecyclerView.Adapter<OrdersPageAdapter.Vi
         street.setText(streetText);
         building.setText(buildingText);
         apartmentNum.setText(apartmentText);
+        commentBtn.setOnClickListener(v -> {
+            String commentText = "";
+            if (entrance != null) {
 
-        commentBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String commentText = "";
-
-                if (entrance != null) {
-                    commentText += "Подъезд: " + entrance + "\n";
-                }
-                if (floor != null) {
-                    commentText += "Этаж: " + floor + "\n";
-                }
-                dialog = new Dialog(context, R.style.AppTheme);
-                dialog.setContentView(R.layout.dialog_comments);
-                Button closeBtn = dialog.findViewById(R.id.dialog_close_btn);
-                TextView content = dialog.findViewById(R.id.comment_view);
-                String responseCom = currentPoint.getCommentary();
-
-                if (responseCom == null) {
-                    if (commentText.equals("")) {
-                        commentText = "Здесь ничего нет";
-                    }
-                } else {
-                    commentText += responseCom;
-                }
-                content.setText(commentText);
-                closeBtn.setOnClickListener(v1 -> {
-                    dialog.dismiss();
-                });
-                dialog.show();
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.argb(162, 5, 5, 5)));
-
-
-
+                commentText += "Подъезд: " + entrance + "\n";
             }
-        });
-        mapBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                openMap(intent);
+            if (floor != null) {
+                commentText += "Этаж: " + floor + "\n";
             }
+            dialog = new Dialog(context, R.style.AppTheme);
+            dialog.setContentView(R.layout.dialog_comments);
+            Button closeBtn = dialog.findViewById(R.id.dialog_close_btn);
+            TextView content = dialog.findViewById(R.id.comment_view);
+            String responseCom = currentPoint.getCommentary();
+            if (responseCom == null) {
+                if (commentText.equals("")) {
+                    commentText = "Здесь ничего нет";
+                }
+            } else {
+                commentText += responseCom;
+            }
+            content.setText(commentText);
+            closeBtn.setOnClickListener(v1 -> {
+                dialog.dismiss();
+            });
+            dialog.show();
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.argb(162, 5, 5, 5)));
         });
-
+        mapBtn.setOnClickListener(v -> openMap(intent));
     }
     public void openMap(Intent intent) {
-
         // Проверяем, установлено ли хотя бы одно приложение, способное выполнить это действие.
         packageManager = context.getPackageManager();
         List<ResolveInfo> activities = packageManager.queryIntentActivities(intent, 0);
@@ -225,8 +196,6 @@ public class OrdersPageAdapter extends RecyclerView.Adapter<OrdersPageAdapter.Vi
             context.startActivity(intent);
         }
     }
-
-
 
     private int getHours(Date date) {
         int utcOffset = TimeZone.getDefault().getOffset(date.getTime()) / 3600000;
