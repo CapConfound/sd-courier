@@ -17,7 +17,7 @@ import ru.simdelivery.sdcourier.R;
 public class ApiClient {
 
     private static Retrofit retrofit;
-    private static final String BASE_URL = "https://simdelivery.ru/courier/";
+    private static final String BASE_URL = "https://api.simdelivery.ru/courier/";
 
 
 

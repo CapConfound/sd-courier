@@ -52,6 +52,9 @@ public class LoginFragment extends Fragment {
     private void authentication() {
         String login_string = loginEdit.getText().toString();
         String password_string = passwordEdit.getText().toString();
+        if (login_string.equals("") || password_string.equals("") ) {
+            showWarningCredentials();
+        }
         sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         String gcmToken = sharedPref.getString(getString(R.string.gcm_token), "");
         Auth data = new Auth(login_string, password_string, gcmToken);
@@ -61,10 +64,11 @@ public class LoginFragment extends Fragment {
             @Override
             public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
 
-                if(response.code() == 401){
-                    Toast.makeText(getContext(), "Введённые данные неверны", Toast.LENGTH_SHORT).show();
+                if(response.code() != 200){
+                    showWarningConnection();
                 }
-                else if (response.code() == 200) {Log.d("код не 401", "точно");
+                else {
+                    Log.d("код не 401", "точно");
                     AuthResponse userData = response.body();
                     Log.d("response.body()", response.toString());
                     sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
@@ -75,9 +79,6 @@ public class LoginFragment extends Fragment {
                     editor.commit();
                     openApp();
 
-                } else {
-                    Toast.makeText(getContext(), "При загрузке данных произошла ошибка", Toast.LENGTH_SHORT).show();
-                    la.showIncorrectLogin();
                 }
 
                 editor = sharedPref.edit();
@@ -100,6 +101,14 @@ public class LoginFragment extends Fragment {
         la.setNavVisible();
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, new OrdersFragment()).addToBackStack(null).commit();
+    }
+
+    private void showWarningConnection() {
+        Toast.makeText(getContext(), "При загрузке данных произошла ошибка", Toast.LENGTH_SHORT).show();
+    }
+
+    private void showWarningCredentials() {
+        la.showIncorrectLogin();
     }
 
 }
