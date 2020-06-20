@@ -54,45 +54,47 @@ public class LoginFragment extends Fragment {
         String password_string = passwordEdit.getText().toString();
         if (login_string.equals("") || password_string.equals("") ) {
             showWarningCredentials();
-        }
-        sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-        String gcmToken = sharedPref.getString(getString(R.string.gcm_token), "");
-        Auth data = new Auth(login_string, password_string, gcmToken);
-        GetUserToken service = ApiClient.getAuthData().create(GetUserToken.class);
-        Call<AuthResponse> call = service.getAuthResponse(data);
-        call.enqueue(new Callback<AuthResponse>() {
-            @Override
-            public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
+        } else {
+            sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+            String gcmToken = sharedPref.getString(getString(R.string.gcm_token), "");
+            Auth data = new Auth(login_string, password_string, gcmToken);
+            GetUserToken service = ApiClient.getAuthData().create(GetUserToken.class);
+            Call<AuthResponse> call = service.getAuthResponse(data);
+            call.enqueue(new Callback<AuthResponse>() {
+                @Override
+                public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
 
-                if(response.code() != 200){
-                    showWarningConnection();
-                }
-                else {
-                    Log.d("код не 401", "точно");
-                    AuthResponse userData = response.body();
-                    Log.d("response.body()", response.toString());
-                    sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+                    if(response.code() != 200){
+                        showWarningConnection();
+                    }
+                    else {
+                        Log.d("код не 401", "точно");
+                        AuthResponse userData = response.body();
+                        Log.d("response.body()", response.toString());
+                        sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+                        editor = sharedPref.edit();
+                        String token = response.body().getToken();
+                        //insert token into SharedPreferences
+                        editor.putString(getString(R.string.auth_token), token);
+                        editor.commit();
+                        openApp();
+
+                    }
+
                     editor = sharedPref.edit();
-                    String token = response.body().getToken();
-                    //insert token into SharedPreferences
-                    editor.putString(getString(R.string.auth_token), token);
+                    editor.putString(getString(R.string.user_email), response.body().getEmail());
+                    editor.putString(getString(R.string.user_name), response.body().getUsername());
                     editor.commit();
-                    openApp();
-
                 }
 
-                editor = sharedPref.edit();
-                editor.putString(getString(R.string.user_email), response.body().getEmail());
-                editor.putString(getString(R.string.user_name), response.body().getUsername());
-                editor.commit();
-            }
+                @Override
+                public void onFailure(Call<AuthResponse> call, Throwable t) {
+                    Log.w("message", t.getMessage());
+                    Toast.makeText(getContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
+                }
+            });
 
-            @Override
-            public void onFailure(Call<AuthResponse> call, Throwable t) {
-                Log.w("message", t.getMessage());
-                Toast.makeText(getContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
-            }
-        });
+        }
     }
 
     private void openApp() {
